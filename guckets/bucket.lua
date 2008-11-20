@@ -1,7 +1,10 @@
 module("guckets.bucket", package.seeall)
 
 function new(self)
-	o = {}
+	o = {
+		water = 0,
+		water_max = 0
+	}
 	setmetatable(o, { __index = self })
 	return o
 end
