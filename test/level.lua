@@ -11,9 +11,9 @@ table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 5 }))
 table.insert(level.buckets, guckets.bucket:new({ water = 1, water_max = 3 }))
 
 table.insert(level.goals, {
-	function (level)
-		return level.buckets[1] == 4
-	end, "%d liters of water in bucket %d", 4, 1 })
+	callback = function (level) return level.buckets[1].water == 4 end,
+	text = "%d liters of water in bucket %d",
+	arguments = { 4, 1 } })
 level:auto_spare_water()
 
 -- run tests
@@ -25,6 +25,7 @@ test.section("Emptying bucket, rechecking spare bucket")
 level.buckets[2]:pour_to(level.spare_bucket)
 test.condition("Available water is 8", level.spare_bucket.water == 8)
 test.condition("Bucket 2 is empty", level.buckets[2].water == 0)
+test.condition("Level is not marked as solved", level:goal_check() == false)
 
 test.section("Playing the level and checking the solution (direct .bucket access)")
 level.spare_bucket:pour_to(level.buckets[2])
@@ -56,6 +57,6 @@ level:bucket_pour(2, 1)
 test.condition("Bucket 1 is 4", level.buckets[1].water == 4)
 test.condition("Bucket 2 is 0", level.buckets[2].water == 0)
 test.condition("Available water is 4", level.spare_bucket.water == 4)
-
+test.condition("Level is marked as solved", level:goal_check() == true)
 
 test.results()

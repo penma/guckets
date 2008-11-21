@@ -42,3 +42,16 @@ end
 function bucket_pour(self, from, to)
 	self.buckets[from]:pour_to(self.buckets[to])
 end
+
+-- goal checking
+-- each goal is a subroutine that returns either true or false, depending on
+-- whether the condition is fulfilled
+-- obviously, when all conditions are met, the level is won.
+function goal_check(self)
+	local k, v
+	local won
+	for k, v in next, self.goals do
+		if not v["callback"](self) then return false end
+	end
+	return true
+end
