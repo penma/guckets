@@ -26,7 +26,7 @@ level.buckets[2]:pour_to(level.spare_bucket)
 test.condition("Available water is 8", level.spare_bucket.water == 8)
 test.condition("Bucket 2 is empty", level.buckets[2].water == 0)
 
-test.section("Playing the level and checking the solution")
+test.section("Playing the level and checking the solution (direct .bucket access)")
 level.spare_bucket:pour_to(level.buckets[2])
 level.buckets[2]:pour_to(level.buckets[1])
 level.spare_bucket:pour_to(level.buckets[2])
@@ -39,5 +39,23 @@ level.buckets[2]:pour_to(level.buckets[1])
 test.condition("Bucket 1 is 4", level.buckets[1].water == 4)
 test.condition("Bucket 2 is 0", level.buckets[2].water == 0)
 test.condition("Available water is 4", level.spare_bucket.water == 4)
+
+test.section("Playing the level and checking the solution (guckets.level wrapper)")
+level:bucket_empty(1)
+level:bucket_empty(2)
+
+level:bucket_fill(2)
+level:bucket_pour(2, 1)
+level:bucket_fill(2)
+level:bucket_pour(2, 1)
+level:bucket_empty(1)
+level:bucket_pour(2, 1)
+level:bucket_fill(2)
+level:bucket_pour(2, 1)
+
+test.condition("Bucket 1 is 4", level.buckets[1].water == 4)
+test.condition("Bucket 2 is 0", level.buckets[2].water == 0)
+test.condition("Available water is 4", level.spare_bucket.water == 4)
+
 
 test.results()

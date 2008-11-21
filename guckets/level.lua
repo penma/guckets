@@ -28,3 +28,17 @@ function auto_spare_water(self)
 	self.spare_bucket.water     = water_max - water_avail
 	self.spare_bucket.water_max = water_max
 end
+
+-- convenience functions to manage pouring. these include filling and emptying
+-- (which are really just the same as pouring from/to the spare bucket).
+function bucket_fill(self, n)
+	self.spare_bucket:pour_to(self.buckets[n])
+end
+
+function bucket_empty(self, n)
+	self.buckets[n]:pour_to(self.spare_bucket)
+end
+
+function bucket_pour(self, from, to)
+	self.buckets[from]:pour_to(self.buckets[to])
+end
