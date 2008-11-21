@@ -4,9 +4,24 @@
 -- License: WTFPL <http://sam.zoy.org/wtfpl>
 
 require "guckets"
+require "posix"
 
+if arg[1] == nil then print [[
+Guckets Text User Interface
+Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
+
+Usage: guckets-tui <level.lua>
+]] os.exit(2) end
+
+if not posix.access(arg[1]) then
+	print(string.format("Error accessing file: %s", posix.errno()))
+	os.exit(3)
+end
+
+-- run the level
 dofile(arg[1])
 
+-- ----------------------------- ONLINE HELP ---------------------------------
 function help(topic)
 	if not topic then print [[
 Guckets Text User Interface
@@ -17,11 +32,11 @@ Commands:
     fill <n>         - Fill bucket n
     empty <n>        - Empty bucket n
     pour <n1> <n2>   - Pour water from bucket n1 to bucket n2
+    (end-of-file)    - Exit
 
 Optional argument for help:
     description      - Game description
-    spare            - What is the spare bucket
-]] end
+    spare            - What is the spare bucket]] end
 	if topic == "description" then print [[
 A short description of Guckets
 
@@ -31,21 +46,21 @@ specific amount of water in one (or probably more) bucket. Sounds easy, but
 you are not allowed to measure the water you fill into your buckets. Thus,
 you can only fill your buckets with water, or you can empty them, or you can
 pour all water into another bucket (until it's full). Depending on the level,
-you maybe don't have unlimited water, so you must think to reach the goal.
-]] end
+you maybe don't have unlimited water, so you must think to reach the goal.]] end
 	if topic == "spare" then print [[
 What is the spare bucket?
 
 The spare bucket is the internal representation of the amount of water you
 can bring into game, in addition to the water that's in the buckets after
 loading a level. In most levels, it will not be limited, but there might be
-some which place a limit on this for an additional challenge.
-]] end
+some which place a limit on this for an additional challenge.]] end
 end
 
+-- ---------------------------- STATE DUMPER ---------------------------------
 function print_state(level)
 	local k, v
-	print("- Current level --------------------------------------------------------------")
+	print("Current level")
+	print()
 	print("Buckets:")
 	for k, v in next, level.buckets do
 		local vis
@@ -59,35 +74,68 @@ function print_state(level)
 	print("Goals to reach:")
 	for k, v in next, level.goals do
 		if v.callback(level) then
-			print("* " .. string.format(v["text"], unpack(v["arguments"])))
+			print("[OK] " .. string.format(v["text"], unpack(v["arguments"])))
 		else
-			print("  " .. string.format(v["text"], unpack(v["arguments"])))
+			print("     " .. string.format(v["text"], unpack(v["arguments"])))
 		end
 	end
-	print()
 end
 
+-- ------------------------------- MAIN LOOP ---------------------------------
 help()
-
+print()
 print_state(level)
-io.write("> ")
+io.write("\n> ")
 
 for input in io.lines() do
 	-- parse the line by words
 	words = {}
 	for word in string.gmatch(input, "%S+") do table.insert(words, word) end
 	
-	if words[1] == "fill"  then level:bucket_fill(tonumber(words[2])) end
-	if words[1] == "empty" then level:bucket_empty(tonumber(words[2])) end
-	if words[1] == "pour"  then level:bucket_pour(tonumber(words[2]), tonumber(words[3])) end
+	-- bucket operations
+	if words[1] == "fill" or words[1] == "empty" then
+		local n
+		n = tonumber(words[2])
+		if n ~= nil and n > 0 and n <= # level.buckets then
+			if words[1] == "fill" then
+				print(string.format("Filling bucket %d", n))
+				level:bucket_fill(n)
+			else
+				print(string.format("Emptying bucket %d", n))
+				level:bucket_empty(n)
+			end
+		else
+			print("ERROR: No such bucket.")
+		end
+	elseif words[1] == "pour" then
+		local n1, n2
+		n1 = tonumber(words[2])
+		n2 = tonumber(words[3])
+		if n1 ~= nil and n2 ~= nil and n1 > 0 and n1 <= # level.buckets and n2 > 0 and n2 <= # level.buckets then
+			if n1 ~= n2 then
+				print(string.format("Pouring water from bucket %d to bucket %d", n1, n2))
+				level:bucket_pour(n1, n2)
+			else
+				print("Source and destination bucket are the same!")
+			end
+		else
+			print("ERROR: No such bucket.")
+		end
 	
-	if words[1] == "help" then help(words[2]) end
+	-- help
+	elseif words[1] == "help" then help(words[2])
 	
+	elseif words[1] == nil then -- nothing
+	else
+		print("No such command.")
+	end
+	
+	print()
 	print_state(level)
 	if level:goal_check() then
 		print("Congratulations, you've solved this level!")
 		os.exit(0)
 	end
 	
-	io.write("> ")
+	io.write("\n> ")
 end
