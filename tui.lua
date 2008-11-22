@@ -13,10 +13,8 @@ Usage: guckets-tui <level.lua>
 ]] os.exit(2) end
 
 -- run the level
-file, msg = io.open(arg[1], "r")
-if not file then print(string.format("Could not open level file: %s", msg)) os.exit(1) end
-assert(loadstring(file:read("*a")))()
-file:close()
+status, msg = pcall(dofile, arg[1])
+if not status then print(string.format("Could not open level file: %s", msg)) os.exit(1) end
 
 -- ----------------------------- ONLINE HELP ---------------------------------
 function help(topic)
