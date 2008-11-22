@@ -130,7 +130,7 @@ for input in io.lines() do
 		print("No such command.")
 	end
 	
-	if changed == 1 then print_state(level) end
+	if changed == 1 then print_state(level) changed = 0 end
 	if level:goal_check() then
 		print("Congratulations, you've solved this level!")
 		os.exit(0)
