@@ -24,6 +24,7 @@ Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
 
 Commands:
     help [<optarg>]  - Show help message
+    show             - Show the bucket state
     fill <n>         - Fill bucket n
     empty <n>        - Empty bucket n
     pour <n1> <n2>   - Pour water from bucket n1 to bucket n2
@@ -82,6 +83,8 @@ print()
 print_state(level)
 io.write("\n> ")
 
+changed = 0
+
 for input in io.lines() do
 	-- parse the line by words
 	words = {}
@@ -99,6 +102,7 @@ for input in io.lines() do
 				print(string.format("Emptying bucket %d", n))
 				level:bucket_empty(n)
 			end
+			changed = 1
 		else
 			print("ERROR: No such bucket.")
 		end
@@ -110,6 +114,7 @@ for input in io.lines() do
 			if n1 ~= n2 then
 				print(string.format("Pouring water from bucket %d to bucket %d", n1, n2))
 				level:bucket_pour(n1, n2)
+				changed = 1
 			else
 				print("Source and destination bucket are the same!")
 			end
@@ -117,16 +122,15 @@ for input in io.lines() do
 			print("ERROR: No such bucket.")
 		end
 	
-	-- help
+	-- help and all else
 	elseif words[1] == "help" then help(words[2])
-	
+	elseif words[1] == "show" then changed = 1
 	elseif words[1] == nil then -- nothing
 	else
 		print("No such command.")
 	end
 	
-	print()
-	print_state(level)
+	if changed == 1 then print_state(level) end
 	if level:goal_check() then
 		print("Congratulations, you've solved this level!")
 		os.exit(0)
