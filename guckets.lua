@@ -3,4 +3,5 @@
 -- License: WTFPL <http://sam.zoy.org/wtfpl>
 
 require "guckets.bucket"
+require "guckets.goal"
 require "guckets.level"

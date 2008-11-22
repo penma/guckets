@@ -10,8 +10,5 @@ table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 3 }))
 table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 9 }))
 table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 5 }))
 
-table.insert(level.goals, {
-	callback = function (level) return level.buckets[2].water == 7 end,
-	text = "%d liters of water in bucket %d",
-	arguments = { 7, 2 } })
+table.insert(level.goals, guckets.goal.water({bucket = 2, water = 7}))
 level:auto_spare_water()
