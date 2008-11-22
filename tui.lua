@@ -63,9 +63,9 @@ function print_state(level)
 		for i =           1, v.water     do vis = vis .. "****|" end
 		for i = v.water + 1, v.water_max do vis = vis .. "....|" end
 		
-		print(string.format("     %2d: %2d / %2d %s", k, v.water, v.water_max, vis))
+		print(string.format("     %5d: %2d / %2d %s", k, v.water, v.water_max, vis))
 	end
-	print(string.format("     Spare bucket: %2d / %2d", level.spare_bucket.water, level.spare_bucket.water_max))
+	print(string.format("     Spare: %2d / %2d", level.spare_bucket.water, level.spare_bucket.water_max))
 	print("Goals to reach:")
 	for k, v in next, level.goals do
 		if v.callback(level) then
