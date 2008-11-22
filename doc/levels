@@ -1,0 +1,124 @@
+HOW TO MAKE LEVELS
+
+Levels are simply Lua scripts. However, no big Lua skills should be required
+if you only want to write levels that have the same capabilities as the
+Guckets C++/Pascal versions had.
+
+Start with something like this:
+
+  level = guckets.level:new()
+  level.author = "Your Name"
+  level.name = "Fancy Title"
+
+There is no strict order in which things are to be generated. However, it's
+recommended you first create all the buckets, and then set the goals. Let's
+create some buckets now:
+
+  table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 5 }))
+  table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 3 }))
+
+As can be easily seen, two buckets are created, with the first one (index 1)
+being able to hold five liters and the second one being able to hold three
+liters of water. Both buckets are initially empty.
+
+You have to provide goals, otherwise your level is always solvable by default
+(this is not defined anywhere actually, it might also be that it's not
+solvable at all, but either way, it's not really playable.) Technically, goals
+are a set of routines that are called whenever something changed in the level.
+They usually check the current state, decide whether it's ok and tell the
+game. In addition to that, an explanatory message is provided to the user plus
+some arguments (it's a format string, so the message can be localized for any
+state of the buckets, for example).
+
+However, certain types of goals are very common. The most common is "X liters
+of water in bucket Y" and putting the full-blown code for this into every level
+file has two issues:
+
+First, if the message would be changed, all level files would have to be
+changed. They would still work but if the translation is then changed too and
+the original string is not supported anymore, different languages get mixed up.
+
+Second, this code in particular is a bit hard to read, although it serves a
+simple purpose.
+
+For this reason, a set of standard functions is given to the level designer
+that can create the goal description plus function automatically. The
+advantage is that it's way easier to maintain, readability is considerably
+improved and... probably many more reasons exist.
+
+Currently, the set of standard functions consists of one routine, which is
+presented here.
+
+So, how do we create a simple goal of the type "X liters of water in bucket Y"?
+
+  table.insert(level.goals, guckets.goal.water({bucket = 1, water = 4}))
+
+That's everything.
+
+If you want a more sophisticated goal, here's the same, just expanded:
+
+  table.insert(level.goals, {
+    callback = function (level) return level.buckets[1].water == 4 end,
+    text = "%d liters of water in bucket %d",
+    arguments = { 4, 1 } })
+
+This code does not need any further explanation, if you feel you know enough
+Lua to be able to write custom goal routines, you will perfectly understand
+this snippet.
+
+Finally you might need this line:
+
+  level:auto_spare_water()
+
+What does it do? In simple words, it ensures that the player can actually fill
+the buckets with water. If you don't care why this is the case, you can stop
+reading here because the level file has nothing more.
+
+Internally, a level maintains a hidden bucket containing enough water to fill
+every bucket to the maximum, and enough additional empty space to store water
+that might already be in the buckets. Why doesn't the game simply provide
+infinite amounts of water but instead maintains available water? The reason is
+simple: it allows level designers to limit the amount of water the player can
+put into the buckets. For example, only five liters of water can be used but
+everything else is normal (the hidden bucket is then initialized with five
+liters content and a maximum of the sum of all other bucket's maxima).
+Another possibily is that no water is provided at all, just the water that's
+already in the buckets at level load. This can even go so far that the hidden
+bucket does have a maximum of 0, which means that fill and empty operations are
+not possible at all (nothing fits into the hidden bucket, so nothing can come
+in or out), and you can only pour water between the buckets in-game! As you can
+see, this provides many ways to design levels even without sophisticated
+amounts of scripting (to be exact, all the previous versions were able to do
+all this as well, as they all maintained a hidden bucket as well).
+
+Should you see the need to set the values of the hidden bucket manually, don't
+call auto_spare_water and instead do the following:
+
+  level.spare_bucket.water = available_water
+  level.spare_bucket.water_max = amount_of_water_that_is_allowed_not_to_be_in_buckets
+
+Now enough of advertising my game.. the routine simply counts the bucket sizes,
+adds them up and sets the hidden bucket's maximum to this. It then counts the
+water in the level, subtracts this from the maximum and fills the hidden bucket
+with so much water. This equates to the default behaviour in previous versions
+(which ran the routine automatically whenever no limits have been provided).
+
+TECHNICAL DESCRIPTION OF LEVELS
+
+Levels are Lua scripts. For now, they're sourced into the application and a
+variable named "level" is created. This works fine in the text user interface
+already.
+
+However, this needs to change for several reasons... First, levels should not
+be given access to *everything* the program currently has - it would allow
+levels to corrupt all internal state. Of course levels should be given many
+capabilities but not too many, really not.
+
+Secondly, there should be another way. The current way of loading levels is
+really more like a hack and it is possible that it does not work in different
+types of frontends (for example, Gtk). Even if it does, this is not
+guaranteed.
+
+For this reasons, *never* depend on this fact, as it might be changed. Also,
+if you do actually need to depend on such things, you're probably doing
+something quite wrong.
