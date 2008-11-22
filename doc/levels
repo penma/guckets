@@ -1,21 +1,21 @@
 HOW TO MAKE LEVELS
 
-Levels are simply Lua scripts. However, no big Lua skills should be required
+Levels are simply Perl scripts. However, no big Perl skills should be required
 if you only want to write levels that have the same capabilities as the
 Guckets C++/Pascal versions had.
 
 Start with something like this:
 
-  level = guckets.level:new()
-  level.author = "Your Name"
-  level.name = "Fancy Title"
+  $level = new Guckets::Level();
+  $level->{author} = "Your Name";
+  $level->{name} = "Fancy Name";
 
 There is no strict order in which things are to be generated. However, it's
 recommended you first create all the buckets, and then set the goals. Let's
 create some buckets now:
 
-  table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 5 }))
-  table.insert(level.buckets, guckets.bucket:new({ water = 0, water_max = 3 }))
+  push(@{$level->{buckets}}, new Guckets::Bucket(0, 5));
+  push(@{$level->{buckets}}, new Guckets::Bucket(0, 3));
 
 As can be easily seen, two buckets are created, with the first one (index 1)
 being able to hold five liters and the second one being able to hold three
@@ -51,24 +51,24 @@ presented here.
 
 So, how do we create a simple goal of the type "X liters of water in bucket Y"?
 
-  table.insert(level.goals, guckets.goal.water({bucket = 1, water = 4}))
+  push(@{$level->{goals}}, Guckets::Goals::water(1, 4));
 
 That's everything.
 
 If you want a more sophisticated goal, here's the same, just expanded:
 
-  table.insert(level.goals, {
-    callback = function (level) return level.buckets[1].water == 4 end,
-    text = "%d liters of water in bucket %d",
-    arguments = { 4, 1 } })
+  push(@{$level->{goals}}, {
+    callback => sub { my ($level) = @_; return $level->{buckets}->[1]->{water} == 4; },
+    text => '%d liters of water in bucket %d',
+    arguments = [ 4, 1 ] });
 
 This code does not need any further explanation, if you feel you know enough
-Lua to be able to write custom goal routines, you will perfectly understand
+Perl to be able to write custom goal routines, you will perfectly understand
 this snippet.
 
 Finally you might need this line:
 
-  level:auto_spare_water()
+  $level->auto_spare_bucket();
 
 What does it do? In simple words, it ensures that the player can actually fill
 the buckets with water. If you don't care why this is the case, you can stop
@@ -92,10 +92,10 @@ amounts of scripting (to be exact, all the previous versions were able to do
 all this as well, as they all maintained a hidden bucket as well).
 
 Should you see the need to set the values of the hidden bucket manually, don't
-call auto_spare_water and instead do the following:
+call auto_spare_bucket and instead do the following:
 
-  level.spare_bucket.water = available_water
-  level.spare_bucket.water_max = amount_of_water_that_is_allowed_not_to_be_in_buckets
+  $level->{spare_bucket}->{water} = $available_water;
+  $level->{spare_bucket}->{water_max} = $amount_of_water_that_is_allowed_not_to_be_in_buckets;
 
 Now enough of advertising my game.. the routine simply counts the bucket sizes,
 adds them up and sets the hidden bucket's maximum to this. It then counts the
@@ -105,8 +105,8 @@ with so much water. This equates to the default behaviour in previous versions
 
 TECHNICAL DESCRIPTION OF LEVELS
 
-Levels are Lua scripts. For now, they're sourced into the application and a
-variable named "level" is created. This works fine in the text user interface
+Levels are Perl scripts. For now, they're sourced into the application and a
+variable named $level is created. This works fine in the text user interface
 already.
 
 However, this needs to change for several reasons... First, levels should not
