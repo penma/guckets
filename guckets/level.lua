@@ -59,3 +59,20 @@ function goal_check(self)
 	end
 	return true
 end
+
+-- load a level from a file
+-- protects the global namespace from accidental changes of the level file.
+-- it does *not* prevent it from using _G.foo to escape, but that's not the
+-- point. the purpose is simply to prevent accidental changes.
+function load(name)
+	if type(name) ~= "string" then error("load is not a method of guckets.level, but a function in a package") end
+	local env = {}
+	setmetatable(env, { __index = _G })
+	setfenv(1, env)
+	setfenv(0, env)
+	
+	status, msg = pcall(dofile, name)
+	if not status then print(string.format("Could not open level file: %s", msg)) os.exit(1) end
+	
+	return level
+end

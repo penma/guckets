@@ -12,9 +12,8 @@ Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
 Usage: guckets-tui <level.lua>
 ]] os.exit(2) end
 
--- run the level
-status, msg = pcall(dofile, arg[1])
-if not status then print(string.format("Could not open level file: %s", msg)) os.exit(1) end
+-- open the level
+level = guckets.level.load(arg[1])
 
 -- ----------------------------- ONLINE HELP ---------------------------------
 function help(topic)
