@@ -27,7 +27,7 @@ Commands:
     fill <n>         - Fill bucket n
     empty <n>        - Empty bucket n
     pour <n1> <n2>   - Pour water from bucket n1 to bucket n2
-    (end-of-file)    - Exit
+    exit, quit       - Exit
 
 Optional argument for help:
     description      - Game description
@@ -63,9 +63,9 @@ function print_state(level)
 		for i =           1, v.water     do vis = vis .. "****|" end
 		for i = v.water + 1, v.water_max do vis = vis .. "....|" end
 		
-		print(string.format("  Bucket %2d: %2d / %2d %s", k, v.water, v.water_max, vis))
+		print(string.format("     %2d: %2d / %2d %s", k, v.water, v.water_max, vis))
 	end
-	print(string.format("  Spare bucket: %2d / %2d", level.spare_bucket.water, level.spare_bucket.water_max))
+	print(string.format("     Spare bucket: %2d / %2d", level.spare_bucket.water, level.spare_bucket.water_max))
 	print("Goals to reach:")
 	for k, v in next, level.goals do
 		if v.callback(level) then
@@ -80,7 +80,7 @@ end
 help()
 print()
 print_state(level)
-io.write("\n> ")
+io.write("> ")
 
 changed = 0
 
@@ -124,6 +124,7 @@ for input in io.lines() do
 	-- help and all else
 	elseif words[1] == "help" then help(words[2])
 	elseif words[1] == "show" then changed = 1
+	elseif words[1] == "exit" or words[1] == "quit" then os.exit(0)
 	elseif words[1] == nil then -- nothing
 	else
 		print("No such command.")
@@ -135,5 +136,5 @@ for input in io.lines() do
 		os.exit(0)
 	end
 	
-	io.write("\n> ")
+	io.write("> ")
 end
