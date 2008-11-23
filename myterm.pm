@@ -62,16 +62,20 @@ sub readline(;$)
 	return $line;
 }
 
-sub width()
+sub dimensions()
 {
 	my ($w, $h) = Term::Size::chars *STDOUT{IO};
-	return $w;
+	return ($w, $h);
+}
+
+sub width()
+{
+	return (dimensions())[0];
 }
 
 sub height()
 {
-	my ($w, $h) = Term::Size::chars *STDOUT{IO};
-	return $w;
+	return (dimensions())[1];
 }
 
 1;
