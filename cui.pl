@@ -35,29 +35,29 @@ sub render_headline
 		" " x int(($width - length($title)) / 2)
 		. $title
 		. " " x int($width - length($title) - ($width - length($title)) / 2);
-	print "\e[m\n";
-	print "\n\n\n";
+	print "\e[m";
+	#print "\n\n\n";
 }
 
 sub render_bucket
 {
 	my ($level, $bucket, $outline_color) = @_;
 	my $off_x = $bucket * 10 + 30;
-	my $off_y = 20;
+	my $off_y = 23; # magic constant
 	
 	# outline
 	for (my $cy = 0; $cy <= $level->{buckets}->[$bucket]->{water_max}; $cy++)
 	{
-		printf("\e[%d;%dH  %s|    |\e[m", $off_y - $cy * 2, $off_x, $outline_color) if ($cy < $level->{buckets}->[$bucket]->{water_max});
-		printf("\e[%d;%dH%2d%s|_   |\e[m", $off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
+		printf("\e[%d;%dH  %s│     │\e[m", $off_y - $cy * 2, $off_x, $outline_color) if ($cy < $level->{buckets}->[$bucket]->{water_max});
+		printf("\e[%d;%dH%2d%s├─    │\e[m", $off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
 	}
-	printf("\e[%d;%dH  `----'", $off_y + 2, $off_x);
+	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 2, $off_x, $outline_color);
 	
 	# fill
 	for (my $cy = 0; $cy < $level->{buckets}->[$bucket]->{water}; $cy++)
 	{
-		printf("\e[%d;%dH\e[31;7m    \e[m", $off_y - $cy * 2, $off_x + 3);
-		printf("\e[%d;%dH\e[31;7m_   \e[m", $off_y - $cy * 2 + 1, $off_x + 3);
+		printf("\e[%d;%dH%s│\e[7;22;34m     \e[m%3\$s│\e[m", $off_y - $cy * 2, $off_x + 2, $outline_color);
+		printf("\e[%d;%dH%s├\e[7;22;34m─    \e[m%3\$s│\e[m", $off_y - $cy * 2 + 1, $off_x + 2, $outline_color);
 	}
 }
 
@@ -73,7 +73,7 @@ sub render
 	render_headline();
 	for (my $c = 0; $c < scalar(@{$level->{buckets}}); $c++)
 	{
-		render_bucket($level, $c, $selected_bucket == $c ? "\e[1;31m" : ($current_bucket == $c ? "\e[1m" : ""));
+		render_bucket($level, $c, $selected_bucket == $c ? "\e[1;31m" : ($current_bucket == $c ? "\e[1;37m" : "\e[1;30m"));
 	}
 }
 
