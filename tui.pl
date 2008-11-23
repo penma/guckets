@@ -22,7 +22,12 @@ EOT
 }
 
 # try to load the level
-my $level = Guckets::Level::load($ARGV[0]);
+my ($level, $error) = Guckets::Level::load($ARGV[0]);
+if (defined($error))
+{
+	print "ERROR: Could not load level: $error\n";
+	exit(1);
+}
 
 $| = 1;
 

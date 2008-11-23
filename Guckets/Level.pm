@@ -81,8 +81,8 @@ sub load
 	my ($name) = @_;
 	# do something better than 'do'
 	our $level;	
-	do($name) or die $!;
-	return $level;
+	do($name) or return (undef, $!);
+	return ($level, undef);
 }
 
 1;
