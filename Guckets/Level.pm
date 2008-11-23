@@ -74,17 +74,4 @@ sub goal_check
 	return 1;
 }
 
-# load a level from a file
-# the purpose of this function is to provide at least simple measures
-# against accidental changes to global data. it might not be a real sandbox
-# at all. (however, levels must not depend on this.)
-sub load
-{
-	my ($name) = @_;
-	# do something better than 'do'
-	our $level;	
-	do($name) or return (undef, $!);
-	return ($level, undef);
-}
-
 1;

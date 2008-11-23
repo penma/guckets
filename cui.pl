@@ -9,7 +9,7 @@ use 5.010;
 use POSIX;
 use myterm;
 
-use Guckets::Level;
+use Guckets::Load;
 use Guckets::CUI;
 
 # prepare terminal
@@ -30,7 +30,7 @@ EOT
 }
 
 # try to load the level
-my ($level, $error) = Guckets::Level::load($ARGV[0]);
+my ($level, $levelset, $error) = Guckets::Load::load($ARGV[0]);
 if (defined($error))
 {
 	die $!;

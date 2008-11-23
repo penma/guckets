@@ -9,6 +9,7 @@ use warnings;
 use Guckets::Bucket;
 use Guckets::Level;
 use Guckets::Goals;
+use Guckets::Load;
 
 if (scalar(@ARGV) < 1)
 {
@@ -22,7 +23,7 @@ EOT
 }
 
 # try to load the level
-my ($level, $error) = Guckets::Level::load($ARGV[0]);
+my ($level, $levelset, $error) = Guckets::Load::load($ARGV[0]);
 if (defined($error))
 {
 	print "ERROR: Could not load level: $error\n";
