@@ -9,5 +9,6 @@ use myterm;
 use Guckets::CUI::Primitives;
 use Guckets::CUI::Dialog;
 use Guckets::CUI::Render;
+use Guckets::CUI::PlayLevel;
 
 1;

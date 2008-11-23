@@ -6,7 +6,9 @@ package Guckets::Level;
 
 use strict;
 use warnings;
+
 use Guckets::Bucket;
+use Guckets::Goals;
 
 sub new
 {
