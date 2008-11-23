@@ -6,9 +6,6 @@
 use strict;
 use warnings;
 
-use Guckets::Bucket;
-use Guckets::Level;
-use Guckets::Goals;
 use Guckets::Load;
 
 if (scalar(@ARGV) < 1)

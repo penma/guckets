@@ -1,0 +1,47 @@
+HOW TO MAKE LEVELSETS
+
+Levelsets are Perl scripts just like levels. They differ from levels only
+in that they don't define a $level but (big surprise) a $levelset. Let's
+create one.
+
+Start with something like this:
+
+  $levelset = new Guckets::Levelset();
+  $levelset->{author} = "Your Name";
+  $levelset->{name} = "Fancy Name";
+
+Should be obvious, heh.
+
+Go on with simply listing the levels. Files are assumed to be relative to
+the levelset file's path.
+
+  push(@{$levelset->{levels}}, "level1.pl");
+  push(@{$levelset->{levels}}, "level2.pl");
+  push(@{$levelset->{levels}}, "level3.pl");
+
+Couldn't have been easier, huh? ;)
+
+TECHNICAL DESCRIPTION OF LEVELSETS, OR RATHER: RANDOM NOTES
+
+It's not known what operations levelsets will support. Almost certainly, they
+will get more capabilities than might be implemented currently. But this is
+sufficient to get all the stuff running. It will not receive a role as
+important as in previous versions, however - frontends will take part of the
+role, or (better) another layer.
+
+In theory, it would/could be possible for levelsets to load other levelsets
+instead of levels. The practical use for this wasn't proven yet however, and
+it will fail without special support from the frontends, which might be
+difficult to properly implement. (The Text User Interface is be the one that
+might be bothered least by this and it would just require an additional four
+lines or so, but as it's not so easy with the other frontends, it's left out
+intentionally.) Therefore, support for loading levelsets from levelsets is
+not implemented anywhere until any useful application has been proven.
+
+Frontends should, for now, take care of choosing the right level themselves.
+In the future, callbacks might be used for communicating with the game and
+there will be some middle-end that controls loading of levels and stuff.
+Would be quite useful because the frontends would not need to do any "thinking"
+on their own, just iterate over given lists and output them to whatever stuff.
+As said, levelsets are one example where this is currently not quite the case.
+

@@ -7,6 +7,11 @@ package Guckets::Load;
 use strict;
 use warnings;
 
+use Guckets::Bucket;
+use Guckets::Goals;
+use Guckets::Level;
+use Guckets::Levelset;
+
 # load a level or a levelset from a file
 # depending on which variable in the returned list is set, the frontend knows
 # what type of interface to invoke.

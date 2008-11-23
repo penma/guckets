@@ -16,6 +16,9 @@ sub new
 		buckets => [],
 		spare_bucket => new Guckets::Bucket(),
 		goals => [],
+		
+		name => "Unknown",
+		author => "Anonymous",
 		}, shift);
 }
 
