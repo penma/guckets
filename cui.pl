@@ -30,34 +30,31 @@ if (defined($error))
 # ----------------------------- RENDERING FUNCTIONS --------------------------
 sub render_headline
 {
-	print "\e[1;1H";
-	print "\e[1;4m";
-	my $title = "G U C K E T S";
 	my $width = myterm::width();
-	# centered text
-	print
-		" " x int(($width - length($title)) / 2)
-		. $title
-		. " " x int($width - length($title) - ($width - length($title)) / 2);
-	print "\e[m";
-	#print "\n\n\n";
+	print "\e[1;1H┌" . "─" x ($width - 2) . "┐";
+	print "\e[2;1H│\e[2;${width}H│";
+	print "\e[3;1H└" . "─" x ($width - 2) . "┘";
+	
+	my $title = "G U C K E T S";
+	printf("\e[2;%dH\e[1m%s\e[m", int(($width - length($title)) / 2), $title);
 }
 
 sub render_bucket
 {
-	my ($level, $bucket, $outline_color) = @_;
-	my $off_x = $bucket * 10 + 30;
-	my $off_y = 23; # magic constant
+	my ($level, $bucket, $outline_color, $height) = @_;
+	my $off_x = $bucket * 10 + 40;
+	my $off_y = $height * 2 + 5;
 	
-	# outline
+	# outline of the bucket
 	for (my $cy = 0; $cy <= $level->{buckets}->[$bucket]->{water_max}; $cy++)
 	{
-		printf("\e[%d;%dH  %s│     │\e[m", $off_y - $cy * 2, $off_x, $outline_color) if ($cy < $level->{buckets}->[$bucket]->{water_max});
+		printf( "\e[%d;%dH  %s│     │\e[m", $off_y - $cy * 2, $off_x, $outline_color)
+			if ($cy < $level->{buckets}->[$bucket]->{water_max});
 		printf("\e[%d;%dH%2d%s├─    │\e[m", $off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
 	}
 	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 2, $off_x, $outline_color);
 	
-	# fill
+	# the content
 	for (my $cy = 0; $cy < $level->{buckets}->[$bucket]->{water}; $cy++)
 	{
 		printf("\e[%d;%dH%s│\e[7;22;34m     \e[m%3\$s│\e[m", $off_y - $cy * 2, $off_x + 2, $outline_color);
@@ -65,7 +62,41 @@ sub render_bucket
 	}
 }
 
-render_headline;
+sub render_goals
+{
+	my ($level) = @_;
+	my $line = 5;
+	
+	foreach (@{$level->{goals}})
+	{
+		my $text = sprintf($_->{text}, @{$_->{arguments}});
+		
+		# poor man's line wrapping
+		my @text;
+		while (length($text))
+		{
+			/()/; # clear $1
+			$text =~ s/^(.{1,32})( |$)//;
+			if ($1)
+			{
+				push(@text, $1);
+			}
+			else
+			{
+				push(@text, $text);
+				$text = "";
+			}
+		}
+		
+		print "\e[32m" if ($_->{callback}->($level));
+		printf("\e[%d;%dH* %s", $line, 6, shift(@text));
+		for ($line++; scalar(@text); $line++)
+		{
+			printf("\e[%d;%dH%s", $line, 8, shift(@text));
+		}
+		print "\e[m";
+	}
+}
 
 sub render
 {
@@ -75,10 +106,15 @@ sub render
 	print "\e[2J";
 	
 	render_headline();
+	
 	for (my $c = 0; $c < scalar(@{$level->{buckets}}); $c++)
 	{
-		render_bucket($level, $c, $selected_bucket == $c ? "\e[1;31m" : ($current_bucket == $c ? "\e[1;37m" : "\e[1;30m"));
+		render_bucket($level, $c,
+			$selected_bucket == $c ? "\e[1;31m" : ($current_bucket == $c ? "\e[1;37m" : "\e[1;30m"),
+			(sort { $b->{water_max} <=> $a->{water_max} } @{$level->{buckets}})[0]->{water_max});
 	}
+	
+	render_goals($level);
 }
 
 
