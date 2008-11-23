@@ -38,8 +38,7 @@ if (defined($error))
 
 $| = 1;
 
-Guckets::CUI::PlayLevel::play($level);
+Guckets::CUI::PlayLevel::play($level) if (defined($level));
+Guckets::CUI::PlayLevelset::play($levelset) if (defined($levelset));
 
 print "\e[1000;1H";
-
-print "Properly exited.\n";

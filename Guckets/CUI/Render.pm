@@ -96,7 +96,7 @@ sub help
 
 sub help_full
 {
-	Guckets::CUI::Dialog::dialog(<< 'END_OF_HELP');
+	Guckets::CUI::Dialog::dialog("normal", << 'END_OF_HELP');
 Guckets (Console-Based User Interface)
 Made 2006, 2007, 2008 by Lars Stoltenow <penma@penma.de>
 

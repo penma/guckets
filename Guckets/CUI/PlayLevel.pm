@@ -59,7 +59,7 @@ sub play
 		
 		if ($level->goal_check())
 		{
-			Guckets::CUI::Dialog::dialog("Congratulations, you've solved this level!");
+			Guckets::CUI::Dialog::dialog("normal", "Congratulations, you've solved this level!");
 			return 0;
 		}
 	}

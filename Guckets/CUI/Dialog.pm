@@ -10,7 +10,7 @@ use Guckets::CUI::Primitives;
 
 sub dialog
 {
-	my ($text) = @_;
+	my ($type, $text) = @_;
 	my ($width, $height) = myterm::dimensions();
 	# Width: approx. 2/3 of screen
 	my $dialogwidth = int($width * 0.6);
@@ -35,13 +35,23 @@ sub dialog
 		
 		# Print a "hit the 'any key' key to continue" message
 		printf("\e[%d;%dH%*s", $dy + $dialogheight - 2, $dx + 2, $dialogwidth - 4,
-			"Scroll: Up/Down, Return: Close");
+			($type eq "question" ? "Y: Yes, N: No" :
+			($type eq "info"     ? "Return: Close" :
+			                       "Scroll: Up/Down, Return: Close")));
 		
 		# Actions... like scrolling, or exiting.
 		my $key = myterm::readkey();
 		$topline-- if ($key eq "\e[A" and $topline > 0);
 		$topline++ if ($key eq "\e[B" and $topline < scalar(@wrappedtext) - $dialogheight + 4);
-		last if ($key eq "\cJ");
+		if ($type eq "question")
+		{
+			return 1 if ($key eq "y");
+			return 0 if ($key eq "n");
+		}
+		else
+		{
+			return if ($key eq "\cJ");
+		}
 	}
 }
 

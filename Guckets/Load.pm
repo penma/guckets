@@ -6,6 +6,7 @@ package Guckets::Load;
 
 use strict;
 use warnings;
+use File::Basename;
 
 use Guckets::Bucket;
 use Guckets::Goals;
@@ -32,6 +33,8 @@ sub load
 	undef $level;
 	undef $levelset;
 	do($name) or return (undef, undef, $!);
+	$levelset->{basepath} = dirname($name) if (defined($levelset));
+	
 	return ($level, $levelset, undef);
 }
 
