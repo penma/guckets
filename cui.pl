@@ -6,6 +6,7 @@
 use strict;
 use warnings;
 use POSIX;
+use Text::Autoformat;
 use myterm;
 
 use Guckets::Bucket;
@@ -28,15 +29,47 @@ if (defined($error))
 }
 
 # ----------------------------- RENDERING FUNCTIONS --------------------------
+sub box
+{
+	my ($x1, $y1, $x2, $y2, $text) = @_;
+	printf("\e[%d;%dH┌%s┐", $y1, $x1, "─" x ($x2 - $x1 - 1));
+	for (my $line = $y1 + 1; $line < $y2; $line++)
+	{
+		printf("\e[%d;%dH│\e[%1\$d;%3\$dH│", $line, $x1, $x2);
+	}
+	printf("\e[%d;%dH└%s┘", $y2, $x1, "─" x ($x2 - $x1 - 1));
+	
+	if (defined($text))
+	{
+		printf("\e[%d;%dH %s ", $y1, $x1 + 2, $text);
+	}
+}
+
+sub text
+{
+	my ($x1, $y1, $width, $text) = @_;
+	my $line = $y1;
+	
+	foreach (split(/\n/, autoformat($text, { right => $width })))
+	{
+		printf("\e[%d;%dH%s", $line, $x1, $_);
+		$line++;
+	}
+	
+	return $line - $y1;
+}
+
 sub render_headline
 {
 	my $width = myterm::width();
-	print "\e[1;1H┌" . "─" x ($width - 2) . "┐";
-	print "\e[2;1H│\e[2;${width}H│";
-	print "\e[3;1H└" . "─" x ($width - 2) . "┘";
+	my $height = myterm::height();
+	
+	box(1, 1, $width, 3);
 	
 	my $title = "G U C K E T S";
 	printf("\e[2;%dH\e[1m%s\e[m", int(($width - length($title)) / 2), $title);
+	
+	box(37, 4, $width, $height);
 }
 
 sub render_bucket
@@ -62,40 +95,38 @@ sub render_bucket
 	}
 }
 
-sub render_goals
+sub render_levelinfo
 {
 	my ($level) = @_;
 	my $line = 5;
 	
+	$line += text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Name", $level->{name}));
+	$line += text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Author", $level->{author}));
+	if ($level->{description})
+	{
+		$line += text(3, $line, 32, sprintf("\e[1m%s:\e[m", "Description"));
+		$line += text(3, $line, 32, $level->{description});
+	}
+	
+	box(1, 4, 36, $line, "Level Information");
+	return $line - 5;
+}
+
+sub render_goals
+{
+	my ($level, $levelinfoheight) = @_;
+	my $line = 7 + $levelinfoheight;
+	my $height = myterm::height();
+	
 	foreach (@{$level->{goals}})
 	{
-		my $text = sprintf($_->{text}, @{$_->{arguments}});
-		
-		# poor man's line wrapping
-		my @text;
-		while (length($text))
-		{
-			/()/; # clear $1
-			$text =~ s/^(.{1,32})( |$)//;
-			if ($1)
-			{
-				push(@text, $1);
-			}
-			else
-			{
-				push(@text, $text);
-				$text = "";
-			}
-		}
-		
 		print "\e[32m" if ($_->{callback}->($level));
-		printf("\e[%d;%dH* %s", $line, 6, shift(@text));
-		for ($line++; scalar(@text); $line++)
-		{
-			printf("\e[%d;%dH%s", $line, 8, shift(@text));
-		}
+		printf("\e[%d;%dH*", $line, 3);
+		$line += text(5, $line, 32, sprintf($_->{text}, @{$_->{arguments}}));
 		print "\e[m";
 	}
+	
+	box(1, 6 + $levelinfoheight, 36, $line, "Goals");
 }
 
 sub render
@@ -107,6 +138,8 @@ sub render
 	
 	render_headline();
 	
+	my $levelinfoheight = render_levelinfo($level);
+	
 	for (my $c = 0; $c < scalar(@{$level->{buckets}}); $c++)
 	{
 		render_bucket($level, $c,
@@ -114,7 +147,7 @@ sub render
 			(sort { $b->{water_max} <=> $a->{water_max} } @{$level->{buckets}})[0]->{water_max});
 	}
 	
-	render_goals($level);
+	render_goals($level, $levelinfoheight);
 }
 
 
