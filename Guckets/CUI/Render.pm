@@ -27,7 +27,7 @@ sub bucket
 {
 	my ($level, $bucket, $outline_color, $height) = @_;
 	my $off_x = $bucket * 10 + 40;
-	my $off_y = $height * 2 + 5;
+	my $off_y = $height * 2 + 4;
 	
 	# outline of the bucket
 	for (my $cy = 0;
@@ -82,9 +82,8 @@ sub goals
 	foreach (@{$level->{goals}})
 	{
 		print "\e[32m" if ($_->{callback}->($level));
-		printf("\e[%d;%dH*", $line, 3);
-		$line += Guckets::CUI::Primitives::text(5, $line, 32,
-			sprintf($_->{text}, @{$_->{arguments}}));
+		$line += Guckets::CUI::Primitives::text(3, $line, 34,
+			"* " . sprintf($_->{text}, @{$_->{arguments}}));
 		print "\e[m";
 	}
 	
