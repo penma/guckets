@@ -32,8 +32,15 @@ sub play
 	Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 	while ($key = myterm::readkey())
 	{
-		$current_bucket-- if ($key eq $keys{left} and $current_bucket > 0);
-		$current_bucket++ if ($key eq $keys{right} and $current_bucket < scalar(@{$level->{buckets}}) - 1);
+		if ($key eq $keys{left} and $current_bucket > 0)
+		{
+			$current_bucket--;
+		}
+		if ($key eq $keys{right}
+			and $current_bucket < scalar(@{$level->{buckets}}) - 1)
+		{
+			$current_bucket++;
+		}
 		
 		if ($key eq $keys{select})
 		{
@@ -49,17 +56,18 @@ sub play
 			}
 		}
 		
-		$level->bucket_fill($current_bucket) if ($key eq $keys{up});
-		$level->bucket_empty($current_bucket) if ($key eq $keys{down});
+		if ($key eq $keys{up}) { $level->bucket_fill($current_bucket); }
+		if ($key eq $keys{down}) { $level->bucket_empty($current_bucket); }
 		
-		return 4 if ($key eq $keys{quit});
-		Guckets::CUI::Render::help_full() if ($key eq $keys{help});
+		if ($key eq $keys{quit}) { return 4; }
+		if ($key eq $keys{help}) { Guckets::CUI::Render::help_full(); }
 		
 		Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 		
 		if ($level->goal_check())
 		{
-			Guckets::CUI::Dialog::dialog("normal", "Congratulations, you've solved this level!");
+			Guckets::CUI::Dialog::dialog("normal",
+				"Congratulations, you've solved this level!");
 			return 0;
 		}
 	}

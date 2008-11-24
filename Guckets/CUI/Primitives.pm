@@ -27,7 +27,10 @@ sub text
 	my ($x1, $y1, $width, $text) = @_;
 	my $line = $y1;
 	
-	foreach (split(/\n/, autoformat($text, { right => $width, fill => 0, all => 1 })))
+	foreach (split(/\n/,
+		autoformat($text,
+		           { right => $width, fill => 0, all => 1 })
+	))
 	{
 		printf("\e[%d;%dH%s", $line, $x1, $_);
 		$line++;

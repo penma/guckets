@@ -23,7 +23,10 @@ sub pour_to
 	my $sum = $target->{water} + $self->{water};
 	$target->{water} = $sum;
 	$self->{water} = $sum - $target->{water_max};
-	$target->{water} = $target->{water_max} if ($target->{water} > $target->{water_max});
+	
+	# fix overflows
+	$target->{water} = $target->{water_max}
+		if ($target->{water} > $target->{water_max});
 	$self->{water} = 0 if ($self->{water} < 0);
 }
 

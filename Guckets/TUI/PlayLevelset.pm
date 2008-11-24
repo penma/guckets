@@ -10,7 +10,9 @@ sub print_levels
 	my ($levelset) = @_;
 	for (my $c = 0; $c < scalar(@{$levelset->{levels}}); $c++)
 	{
-		printf("%4d %s (%s)\n", $c + 1, $levelset->{level_names}->[$c], $levelset->{level_authors}->[$c]);
+		printf("%4d %s (%s)\n", $c + 1,
+			$levelset->{level_names}->[$c],
+			$levelset->{level_authors}->[$c]);
 	}
 }
 
@@ -26,7 +28,8 @@ sub play
 	$levelset->{level_authors} = [];
 	foreach (@{$levelset->{levels}})
 	{
-		my ($level, undef, $error) = Guckets::Load::load($levelset->{basepath} . "/" . $_);
+		my ($level, undef, $error) =
+			Guckets::Load::load($levelset->{basepath} . "/" . $_);
 		if (defined($error))
 		{
 			push(@{$levelset->{level_names}}, "(Level load error: $error)");
@@ -34,8 +37,10 @@ sub play
 		}
 		else
 		{
-			push(@{$levelset->{level_names}}, $level->{name} // "Unknown");
-			push(@{$levelset->{level_authors}}, $level->{author} // "Anonymous");
+			push(@{$levelset->{level_names}},
+				$level->{name} // "Unknown");
+			push(@{$levelset->{level_authors}},
+				$level->{author} // "Anonymous");
 		}
 		undef($level);
 	}
@@ -72,7 +77,9 @@ sub play
 				}
 				elsif (!defined($current_level))
 				{
-					print "Error playing this level: The level did not provide a level (maybe it's a levelset?)" . "\n";
+					printf("Error loading this level: %s",
+						"The level did not provide a level (maybe it's a levelset?)");
+					print "\n";
 					goto prepare_next;
 				}
 				
@@ -85,7 +92,8 @@ sub play
 				$num++;
 				if ($num == scalar(@{$levelset->{levels}})) # all levels done
 				{
-					print "Congratulations! You mastered the whole levelset!" . "\n";
+					print "Congratulations! You mastered the whole levelset!";
+					print "\n";
 					return 0;
 				}
 				else

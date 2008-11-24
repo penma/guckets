@@ -16,10 +16,14 @@ sub print_state
 		$visu .= "****|" for (1 .. $_->{water});
 		$visu .= "....|" for ($_->{water} + 1 .. $_->{water_max});
 		
-		printf("     %5d: %2d / %2d %s\n", $id, $_->{water}, $_->{water_max}, $visu);
+		printf("     %5d: %2d / %2d %s\n",
+			$id, $_->{water}, $_->{water_max},
+			$visu);
 		$id++;
 	}
-	printf("     Spare: %2d / %2d\n", $level->{spare_bucket}->{water}, $level->{spare_bucket}->{water_max});
+	printf("     Spare: %2d / %2d\n",
+		$level->{spare_bucket}->{water},
+		$level->{spare_bucket}->{water_max});
 	
 	print "Goals to reach:\n";
 	foreach (@{$level->{goals}})
@@ -74,7 +78,9 @@ sub play
 		elsif ($_[0] eq "pour")
 		{
 			my ($n1, $n2) = (int($_[1]), int($_[2]));
-			if ($n1 == 0 or $n2 == 0 or $n1 > scalar(@{$level->{buckets}}) or $n2 > scalar(@{$level->{buckets}}))
+			if ($n1 == 0 or $n2 == 0
+			    or $n1 > scalar(@{$level->{buckets}})
+			    or $n2 > scalar(@{$level->{buckets}}))
 			{
 				print "ERROR: No such bucket.\n";
 			}

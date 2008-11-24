@@ -15,7 +15,10 @@ sub headline
 	Guckets::CUI::Primitives::box(1, 1, $width, 3);
 	
 	my $title = "G U C K E T S";
-	printf("\e[2;%dH\e[1m%s\e[m", int(($width - length($title)) / 2), $title);
+	# centered text
+	printf("\e[%d;%dH\e[1m%s\e[m",
+		2, int(($width - length($title)) / 2),
+		$title);
 	
 	Guckets::CUI::Primitives::box(37, 4, $width, $height);
 }
@@ -27,11 +30,15 @@ sub bucket
 	my $off_y = $height * 2 + 5;
 	
 	# outline of the bucket
-	for (my $cy = 0; $cy <= $level->{buckets}->[$bucket]->{water_max}; $cy++)
+	for (my $cy = 0;
+	     $cy <= $level->{buckets}->[$bucket]->{water_max};
+	     $cy++)
 	{
-		printf( "\e[%d;%dH  %s│     │\e[m", $off_y - $cy * 2, $off_x, $outline_color)
+		printf( "\e[%d;%dH  %s│     │\e[m",
+			$off_y - $cy * 2, $off_x, $outline_color)
 			if ($cy < $level->{buckets}->[$bucket]->{water_max});
-		printf("\e[%d;%dH%2d%s├─    │\e[m", $off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
+		printf("\e[%d;%dH%2d%s├─    │\e[m",
+			$off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
 	}
 	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 2, $off_x, $outline_color);
 	printf("\e[%d;%dH%d", $off_y + 3, $off_x + 5, $bucket + 1);
@@ -39,8 +46,10 @@ sub bucket
 	# the content
 	for (my $cy = 0; $cy < $level->{buckets}->[$bucket]->{water}; $cy++)
 	{
-		printf("\e[%d;%dH%s│\e[7;22;34m     \e[m%3\$s│\e[m", $off_y - $cy * 2, $off_x + 2, $outline_color);
-		printf("\e[%d;%dH%s├\e[7;22;34m─    \e[m%3\$s│\e[m", $off_y - $cy * 2 + 1, $off_x + 2, $outline_color);
+		printf("\e[%d;%dH%s│\e[7;22;34m     \e[m%3\$s│\e[m",
+			$off_y - $cy * 2, $off_x + 2, $outline_color);
+		printf("\e[%d;%dH%s├\e[7;22;34m─    \e[m%3\$s│\e[m",
+			$off_y - $cy * 2 + 1, $off_x + 2, $outline_color);
 	}
 }
 
@@ -49,12 +58,16 @@ sub levelinfo
 	my ($level) = @_;
 	my $line = 5;
 	
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Name", $level->{name}));
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Author", $level->{author}));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "Name", $level->{name}));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "Author", $level->{author}));
 	if ($level->{description})
 	{
-		$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m", "Description"));
-		$line += Guckets::CUI::Primitives::text(3, $line, 32, $level->{description});
+		$line += Guckets::CUI::Primitives::text(3, $line, 32,
+			sprintf("\e[1m%s:\e[m", "Description"));
+		$line += Guckets::CUI::Primitives::text(3, $line, 32,
+			$level->{description});
 	}
 	
 	Guckets::CUI::Primitives::box(1, 4, 36, $line, "Level Information");
@@ -70,7 +83,8 @@ sub goals
 	{
 		print "\e[32m" if ($_->{callback}->($level));
 		printf("\e[%d;%dH*", $line, 3);
-		$line += Guckets::CUI::Primitives::text(5, $line, 32, sprintf($_->{text}, @{$_->{arguments}}));
+		$line += Guckets::CUI::Primitives::text(5, $line, 32,
+			sprintf($_->{text}, @{$_->{arguments}}));
 		print "\e[m";
 	}
 	
@@ -84,13 +98,19 @@ sub help
 	my ($used_height) = @_;
 	my $line = 7 + $used_height;
 	
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Left/Right", "Choose Bucket"));
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Up/Down", "Fill/Empty"));
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "Enter", "Select for pouring"));
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "h", "Help"));
-	$line += Guckets::CUI::Primitives::text(3, $line, 32, sprintf("\e[1m%s:\e[m %s", "q", "Exit"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "Left/Right", "Choose Bucket"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "Up/Down", "Fill/Empty"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "Enter", "Select for pouring"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "h", "Help"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "q", "Exit"));
 	
-	Guckets::CUI::Primitives::box(1, 6 + $used_height, 36, $line, "Quick Help");
+	Guckets::CUI::Primitives::box(1, 6 + $used_height, 36, $line,
+		"Quick Help");
 	return $line - 5;
 }
 
@@ -128,8 +148,12 @@ sub render
 	for (my $c = 0; $c < scalar(@{$level->{buckets}}); $c++)
 	{
 		bucket($level, $c,
-			$selected_bucket == $c ? "\e[1;31m" : ($current_bucket == $c ? "\e[1;37m" : "\e[1;30m"),
-			(sort { $b->{water_max} <=> $a->{water_max} } @{$level->{buckets}})[0]->{water_max});
+			$selected_bucket == $c ? "\e[1;31m" :
+			($current_bucket == $c ? "\e[1;37m" : "\e[1;30m"),
+			
+			(sort { $b->{water_max} <=> $a->{water_max} }
+				@{$level->{buckets}}
+			)[0]->{water_max});
 	}
 	
 	printf("\e[%d;%dH", myterm::height(), 1);
