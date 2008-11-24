@@ -1,6 +1,6 @@
 $level = new Guckets::Level();
 $level->{author} = "Vsevolod Kozlov";
-$level->{name} = "Level 6";
+$level->{name} = "Level 7";
 
 push(@{$level->{buckets}}, new Guckets::Bucket(0, 2));
 push(@{$level->{buckets}}, new Guckets::Bucket(0, 9));

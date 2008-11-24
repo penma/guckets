@@ -1,10 +1,11 @@
 $level = new Guckets::Level();
-$level->{author} = "Daniel Friesel";
+$level->{author} = "Lars Stoltenow";
 $level->{name} = "Level 4";
 
-push(@{$level->{buckets}}, new Guckets::Bucket(0, $_)) for (reverse(6..10));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 3));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 9));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 5));
 
-push(@{$level->{goals}}, Guckets::Goals::water(2, 1));
-push(@{$level->{goals}}, Guckets::Goals::water(3, 5));
+push(@{$level->{goals}}, Guckets::Goals::water(2, 7));
 
 $level->auto_spare_bucket();
