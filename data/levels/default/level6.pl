@@ -1,0 +1,10 @@
+$level = new Guckets::Level();
+$level->{author} = "Lars Stoltenow";
+$level->{name} = "Level 6";
+
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 7));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 5));
+
+push(@{$level->{goals}}, Guckets::Goals::water(1, 6));
+
+$level->auto_spare_bucket();
