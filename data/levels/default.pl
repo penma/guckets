@@ -11,3 +11,4 @@ push(@{$levelset->{levels}}, "default/level6.pl");
 push(@{$levelset->{levels}}, "default/level7.pl");
 push(@{$levelset->{levels}}, "default/level8.pl");
 push(@{$levelset->{levels}}, "default/level9.pl");
+push(@{$levelset->{levels}}, "default/level10.pl");
