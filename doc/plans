@@ -1,0 +1,27 @@
+SOME POSSIBLE PLANS FOR THE FUTURE
+
+Change the level language back to Lua.
+
+Maybe base FE/BE communication on callbacks, thereby introducing a
+"Middle End".
+
+Add many kinds of callbacks usable by levels. Time isn't necessary though...
+I don't think levels should use this. (Feel free to prove me wrong.) But well,
+there was a reason to introduce these advanced scripting capabilities..!
+So we could use a callback that's called on every change in the level (or just
+changes to a specific bucket). Provide level-wide data storage (if possible,
+by just doing "my $foo;" at the top level).
+
+MANY MANY more levels, probably some using scripting. And also provide many
+more levels without scripting. Guckets isn't THAT kind of game that would just
+be plain boring without scripting (at least I can't think of any really cool
+and big stuff realised with scripts) but there's no reason not to provide it.
+(And after all, this scripting stuff saves me from writing or using a parser
+for level files... :D)
+
+Reintroduce Level 5, should its author ever awake from IRC coma (GPL -> WTPFL).
+
+Possibly write a game guide, showing some solutions and/or tricks for the
+levels. (The part with the tricks sound very nice, like, guide how to solve
+levels more quickly - and it might be real fun to think about it.. whether
+there are actually methods that can be used on this kind of game... :-))
