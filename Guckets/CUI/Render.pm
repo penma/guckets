@@ -23,7 +23,7 @@ sub headline
 	Guckets::CUI::Primitives::box(37, 4, $width, $height);
 }
 
-sub bucket
+sub bucket_large
 {
 	my ($level, $bucket, $outline_color, $height) = @_;
 	my $off_x = $bucket * 10 + 40;
@@ -50,6 +50,41 @@ sub bucket
 			$off_y - $cy * 2, $off_x + 2, $outline_color);
 		printf("\e[%d;%dH%s├\e[7;22;34m─    \e[m%3\$s│\e[m",
 			$off_y - $cy * 2 + 1, $off_x + 2, $outline_color);
+	}
+}
+
+sub bucket_small
+{
+	my ($level, $bucket, $outline_color, $height) = @_;
+	my $off_x = $bucket * 10 + 40;
+	my $off_y = $height + 5;
+	
+	# outline + content of the bucket
+	for (my $cy = 0;
+	     $cy <= $level->{buckets}->[$bucket]->{water_max};
+	     $cy++)
+	{
+		printf("\e[%d;%dH  %s│%s     \e[m%3\$s│\e[m",
+			$off_y - $cy, $off_x, $outline_color,
+			$cy < $level->{buckets}->[$bucket]->{water} ? "\e[7;34;22m" : "")
+	}
+	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 1, $off_x, $outline_color);
+	printf("\e[%d;%dH%d (%2d/%2d)", $off_y + 2, $off_x, $bucket + 1,
+		$level->{buckets}->[$bucket]->{water},
+		$level->{buckets}->[$bucket]->{water_max});
+}
+
+sub bucket
+{
+	my ($level, $bucket, $outline_color, $height) = @_;
+	
+	if ((myterm::height() - 8) / 2 >= $height)
+	{
+		bucket_large(@_);
+	}
+	else
+	{
+		bucket_small(@_);
 	}
 }
 
