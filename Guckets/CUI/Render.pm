@@ -56,7 +56,7 @@ sub bucket_large
 sub bucket_small
 {
 	my ($level, $bucket, $outline_color, $height) = @_;
-	my $off_x = $bucket * 10 + 40;
+	my $off_x = $bucket * 7 + 39;
 	my $off_y = $height + 5;
 	
 	# outline + content of the bucket
@@ -64,12 +64,13 @@ sub bucket_small
 	     $cy <= $level->{buckets}->[$bucket]->{water_max};
 	     $cy++)
 	{
-		printf("\e[%d;%dH  %s│%s     \e[m%3\$s│\e[m",
+		printf("\e[%d;%dH%s│%s   \e[m%3\$s│\e[m",
 			$off_y - $cy, $off_x, $outline_color,
 			$cy < $level->{buckets}->[$bucket]->{water} ? "\e[7;34;22m" : "")
 	}
-	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 1, $off_x, $outline_color);
-	printf("\e[%d;%dH%d (%2d/%2d)", $off_y + 2, $off_x, $bucket + 1,
+	printf("\e[%d;%dH%s└───┘\e[m", $off_y + 1, $off_x, $outline_color);
+	printf("\e[%d;%dH %2d", $off_y + 2, $off_x, $bucket + 1);
+	printf("\e[%d;%dH%2d/%2d", $off_y + 3, $off_x,
 		$level->{buckets}->[$bucket]->{water},
 		$level->{buckets}->[$bucket]->{water_max});
 }
