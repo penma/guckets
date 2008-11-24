@@ -32,7 +32,7 @@ sub load
 	our $levelset;
 	undef $level;
 	undef $levelset;
-	do($name) or return (undef, undef, $!);
+	return (undef, undef, $!) if (!defined(do($name)));
 	$levelset->{basepath} = dirname($name) if (defined($levelset));
 	
 	return ($level, $levelset, undef);

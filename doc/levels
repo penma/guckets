@@ -103,6 +103,9 @@ water in the level, subtracts this from the maximum and fills the hidden bucket
 with so much water. This equates to the default behaviour in previous versions
 (which ran the routine automatically whenever no limits have been provided).
 
+Should the last statement in the level file evaluate to undef, you must add
+a '1;'.
+
 TECHNICAL DESCRIPTION OF LEVELS
 
 Levels are Perl scripts. For now, they're sourced into the application and a
