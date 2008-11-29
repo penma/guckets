@@ -19,7 +19,8 @@ and big stuff realised with scripts) but there's no reason not to provide it.
 (And after all, this scripting stuff saves me from writing or using a parser
 for level files... :D)
 
-Reintroduce Level 6, should its author ever awake from IRC coma (GPL -> WTPFL).
+Bring the levels in some appropriate order (maybe put the classic level at
+something like level 3 or 4), name them better than Level X.
 
 Possibly write a game guide, showing some solutions and/or tricks for the
 levels. (The part with the tricks sound very nice, like, guide how to solve
