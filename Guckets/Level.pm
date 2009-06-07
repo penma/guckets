@@ -12,6 +12,8 @@ sub new {
 		spare_bucket => new Guckets::Bucket(),
 		goals => [],
 
+		hooks => {},
+
 		name => "Unknown",
 		author => "Anonymous",
 		}, shift);
@@ -38,16 +40,19 @@ sub auto_spare_bucket {
 # (which are really just the same as pouring from/to the spare bucket).
 sub bucket_fill {
 	my ($self, $bucket) = @_;
+	return if ($self->{hooks}->{fill} and not $self->{hooks}->{fill}->($self, $bucket));
 	$self->{spare_bucket}->pour_to($self->{buckets}->[$bucket]);
 }
 
 sub bucket_empty {
 	my ($self, $bucket) = @_;
+	return if ($self->{hooks}->{empty} and not $self->{hooks}->{empty}->($self, $bucket));
 	$self->{buckets}->[$bucket]->pour_to($self->{spare_bucket});
 }
 
 sub bucket_pour {
 	my ($self, $bucket1, $bucket2) = @_;
+	return if ($self->{hooks}->{pour} and not $self->{hooks}->{pour}->($self, $bucket1, $bucket2));
 	$self->{buckets}->[$bucket1]->pour_to($self->{buckets}->[$bucket2]);
 }
 
