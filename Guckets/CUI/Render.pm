@@ -125,7 +125,7 @@ sub help {
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
 		sprintf("\e[1m%s:\e[m %s", "Enter", "Select for pouring"));
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
-		sprintf("\e[1m%s:\e[m %s", "h", "Help"));
+		sprintf("\e[1m%s:\e[m %s", "?", "Help"));
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
 		sprintf("\e[1m%s:\e[m %s", "q", "Exit"));
 

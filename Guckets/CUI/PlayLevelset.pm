@@ -163,10 +163,10 @@ sub play {
 			}
 		}
 
-		if ($key eq "\e[A" and $menu_selected > 0) {
+		if (($key eq "\e[A" or $key eq "k") and $menu_selected > 0) {
 			$menu_selected--;
 		}
-		if ($key eq "\e[B" and $menu_selected < scalar(@{$levelset->{levels}}) - 1) {
+		if (($key eq "\e[B" or $key eq "j") and $menu_selected < scalar(@{$levelset->{levels}}) - 1) {
 			$menu_selected++;
 		}
 

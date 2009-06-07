@@ -13,13 +13,19 @@ use Guckets::Goals;
 use Guckets::CUI;
 
 my %keys = (
-	left => "\e[D",
-	down => "\e[B",
-	up => "\e[A",
-	right => "\e[C",
-	select => "\cJ",
-	help => "h",
-	quit => "q"
+	"\e[D" => "left",
+	"\e[B" => "down",
+	"\e[A" => "up",
+	"\e[C" => "right",
+	"\cJ" => "select",
+
+	"h" => "left",
+	"j" => "down",
+	"k" => "up",
+	"l" => "right",
+
+	"?" => "help",
+	"q" => "quit",
 );
 
 sub play {
@@ -30,15 +36,17 @@ sub play {
 	my $selected_bucket = -1;
 	Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 	while ($key = myterm::readkey()) {
-		if ($key eq $keys{left} and $current_bucket > 0) {
+		$key = $keys{$key};
+
+		if ($key eq "left" and $current_bucket > 0) {
 			$current_bucket--;
 		}
-		if ($key eq $keys{right}
+		if ($key eq "right"
 			and $current_bucket < scalar(@{$level->{buckets}}) - 1) {
 			$current_bucket++;
 		}
 
-		if ($key eq $keys{select}) {
+		if ($key eq "select") {
 			if ($selected_bucket == -1) { # no bucket selected yet
 				$selected_bucket = $current_bucket;
 			} else { # do some action, we have two buckets now
@@ -48,11 +56,11 @@ sub play {
 			}
 		}
 
-		if ($key eq $keys{up}) { $level->bucket_fill($current_bucket); }
-		if ($key eq $keys{down}) { $level->bucket_empty($current_bucket); }
+		if ($key eq "up") { $level->bucket_fill($current_bucket); }
+		if ($key eq "down") { $level->bucket_empty($current_bucket); }
 
-		if ($key eq $keys{quit}) { return 4; }
-		if ($key eq $keys{help}) { Guckets::CUI::Render::help_full(); }
+		if ($key eq "quit") { return 4; }
+		if ($key eq "help") { Guckets::CUI::Render::help_full(); }
 
 		Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 
