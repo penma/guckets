@@ -1,0 +1,36 @@
+$level = new Guckets::Level();
+$level->{author} = "Lars Stoltenow";
+$level->{name} = "Extra Level 1";
+$level->{description} =
+	"You know this already. This time however, when you pour, you must " .
+	"transfer at least two liters of water.";
+$level->{longdescription} = << "EOF";
+(some intelligent text here)
+EOF
+
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 6));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 5));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 4));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 3));
+
+push(@{$level->{goals}}, Guckets::Goals::water(1, 4));
+push(@{$level->{goals}}, Guckets::Goals::water(3, 3));
+push(@{$level->{goals}}, Guckets::Goals::water(4, 1));
+
+$level->auto_spare_bucket();
+
+sub max { return $_[0] > $_[1] ? $_[0] : $_[1]; }
+sub min { return $_[0] < $_[1] ? $_[0] : $_[1]; }
+$level->{hooks}->{pour} = sub {
+	my ($self, $bucket1, $bucket2) = @_;
+	my ($max1, $max2, $wat1, $wat2) = (
+		$self->{buckets}->[$bucket1]->{water_max},
+		$self->{buckets}->[$bucket2]->{water_max},
+		$self->{buckets}->[$bucket1]->{water},
+		$self->{buckets}->[$bucket2]->{water}
+	);
+
+	my $transfer = min($wat1, $max2 - $wat2);
+	return "You're transferring less than 2 liters at once!" if ($transfer < 2);
+	return undef;
+};
