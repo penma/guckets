@@ -1,8 +1,4 @@
 #!/usr/bin/env perl
-# Guckets
-# Made 2006, 2007, 2008 by Lars Stoltenow <penma@penma.de>
-# License: WTFPL <http://sam.zoy.org/wtfpl>
-
 use strict;
 use warnings;
 
