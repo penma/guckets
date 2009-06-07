@@ -7,8 +7,7 @@ package Guckets::Bucket;
 use strict;
 use warnings;
 
-sub new
-{
+sub new {
 	my ($self, $water, $water_max) = @_;
 	return bless({
 		water => ($water or 0),
@@ -17,13 +16,12 @@ sub new
 }
 
 # pour water from self to target bucket.
-sub pour_to
-{
+sub pour_to {
 	my ($self, $target) = @_;
 	my $sum = $target->{water} + $self->{water};
 	$target->{water} = $sum;
 	$self->{water} = $sum - $target->{water_max};
-	
+
 	# fix overflows
 	$target->{water} = $target->{water_max}
 		if ($target->{water} > $target->{water_max});

@@ -7,11 +7,10 @@ package Guckets::Levelset;
 use strict;
 use warnings;
 
-sub new
-{
+sub new {
 	return bless({
 		levels => [],
-		
+
 		name => "Unknown",
 		author => "Anonymous"
 		}, shift);

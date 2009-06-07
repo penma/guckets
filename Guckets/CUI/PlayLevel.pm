@@ -22,50 +22,41 @@ my %keys = (
 	quit => "q"
 );
 
-sub play
-{
+sub play {
 	my ($level) = @_;
-	
+
 	my $key;
 	my $current_bucket = 0;
 	my $selected_bucket = -1;
 	Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
-	while ($key = myterm::readkey())
-	{
-		if ($key eq $keys{left} and $current_bucket > 0)
-		{
+	while ($key = myterm::readkey()) {
+		if ($key eq $keys{left} and $current_bucket > 0) {
 			$current_bucket--;
 		}
 		if ($key eq $keys{right}
-			and $current_bucket < scalar(@{$level->{buckets}}) - 1)
-		{
+			and $current_bucket < scalar(@{$level->{buckets}}) - 1) {
 			$current_bucket++;
 		}
-		
-		if ($key eq $keys{select})
-		{
-			if ($selected_bucket == -1) # no bucket selected yet
-			{
+
+		if ($key eq $keys{select}) {
+			if ($selected_bucket == -1) { # no bucket selected yet
 				$selected_bucket = $current_bucket;
-			}
-			else # do some action, we have two buckets now
-			{
+			} else { # do some action, we have two buckets now
 				$level->bucket_pour($selected_bucket, $current_bucket)
 					if ($selected_bucket != $current_bucket);
 				$selected_bucket = -1;
 			}
 		}
-		
+
 		if ($key eq $keys{up}) { $level->bucket_fill($current_bucket); }
 		if ($key eq $keys{down}) { $level->bucket_empty($current_bucket); }
-		
+
 		if ($key eq $keys{quit}) { return 4; }
 		if ($key eq $keys{help}) { Guckets::CUI::Render::help_full(); }
-		
+
 		Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
-		
-		if ($level->goal_check())
-		{
+
+		if ($level->goal_check()) {
 			Guckets::CUI::Dialog::dialog("info",
 				"Congratulations, you've solved this level!");
 			return 0;

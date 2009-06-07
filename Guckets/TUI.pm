@@ -6,11 +6,9 @@ use warnings;
 use Guckets::TUI::PlayLevel;
 use Guckets::TUI::PlayLevelset;
 
-sub help
-{
+sub help {
 	my ($topic) = @_;
-	if (!defined($topic))
-	{
+	if (!defined($topic)) {
 		print << 'EOT';
 Guckets Text User Interface
 Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
@@ -18,8 +16,7 @@ Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
 Commands:
     help [<optarg>]  - Show help message
 EOT
-		if (caller() ne "Guckets::TUI::PlayLevelset")
-		{
+		if (caller() ne "Guckets::TUI::PlayLevelset") {
 			print << 'EOT';
     show             - Show the bucket state
     fill <n>         - Fill bucket n
@@ -27,9 +24,7 @@ EOT
     pour <n1> <n2>   - Pour water from bucket n1 to bucket n2
     exit, quit       - Leave to the main menu
 EOT
-		}
-		else
-		{
+		} else {
 			print << 'EOT';
     show             - List available levels
     start [<n>]      - Start Level n (or first level, if not specified)
@@ -42,9 +37,7 @@ Optional argument for help:
     description      - Game description
     spare            - What is the spare bucket
 EOT
-	}
-	elsif ($topic eq "description")
-	{
+	} elsif ($topic eq "description") {
 		print << 'EOT';
 A short description of Guckets
 
@@ -56,9 +49,7 @@ you can only fill your buckets with water, or you can empty them, or you can
 pour all water into another bucket (until it's full). Depending on the level,
 you maybe don't have unlimited water, so you must think to reach the goal.
 EOT
-	}
-	elsif ($topic eq "spare")
-	{
+	} elsif ($topic eq "spare") {
 		print << 'EOT';
 What is the spare bucket?
 
@@ -67,9 +58,7 @@ can bring into game, in addition to the water that's in the buckets after
 loading a level. In most levels, it will not be limited, but there might be
 some which place a limit on this for an additional challenge.
 EOT
-	}
-	else
-	{
+	} else {
 		print "No help for that topic.\n";
 	}
 }

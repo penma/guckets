@@ -13,16 +13,14 @@ use Guckets::Load;
 use Guckets::CUI;
 
 # prepare terminal
-$SIG{INT} = $SIG{TERM} = sub
-{
+$SIG{INT} = $SIG{TERM} = sub {
 	myterm::set(POSIX::ICANON | POSIX::ECHO);
 	exit(4);
 };
 
 myterm::unset(POSIX::ICANON | POSIX::ECHO);
 
-if (scalar(@ARGV) < 1)
-{
+if (scalar(@ARGV) < 1) {
 	print << 'EOT';
 Usage: guckets-tui <level>
 EOT
@@ -31,10 +29,7 @@ EOT
 
 # try to load the level
 my ($level, $levelset, $error) = Guckets::Load::load($ARGV[0]);
-if (defined($error))
-{
-	die $!;
-}
+die $! if (defined($error));
 
 $| = 1;
 

@@ -24,17 +24,14 @@ use Guckets::Levelset;
 # the purpose of this function is to provide at least simple measures
 # against accidental changes to global data. it might not be a real sandbox
 # at all. (however, levels must not depend on this.)
-sub load
-{
+sub load {
 	my ($name) = @_;
 	# do something better than 'do'
-	our $level;
-	our $levelset;
-	undef $level;
-	undef $levelset;
+	our $level = undef;
+	our $levelset = undef;
 	return (undef, undef, $!) if (!defined(do($name)));
 	$levelset->{basepath} = dirname($name) if (defined($levelset));
-	
+
 	return ($level, $levelset, undef);
 }
 

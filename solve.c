@@ -33,8 +33,7 @@ is according to this.
 #include <stdint.h>
 #include <math.h>
 
-struct bucket
-{
+struct bucket {
 	int water;
 	int maximum;
 	int target;
@@ -45,8 +44,7 @@ struct bucket
 struct bucket ibuckets[MAXBUCKETS];
 int nibuckets = 0;
 
-struct step
-{
+struct step {
 	int from;
 	int to;
 };
@@ -55,20 +53,17 @@ struct step
 int steps_min, steps_max;
 
 uint64_t nprogress = 0;
-static inline void progress()
-{
+static void progress() {
 	uint64_t maximum = pow(nibuckets * nibuckets, steps_max);
-	
-	if (!(nprogress % (1048576 * 4)))
-	{
+
+	if (!(nprogress % (1048576 * 4))) {
 		fprintf(stderr, "%lld/%lld (%4.1f%%)\n",
 			nprogress, maximum, (double) (nprogress * 100) / maximum);
 	}
 	nprogress++;
 }
 
-void pour(struct bucket *from, struct bucket *to)
-{
+void pour(struct bucket *from, struct bucket *to) {
 	int sum = to->water + from->water;
 	to->water = sum;
 	from->water = sum - to->maximum;
@@ -76,40 +71,34 @@ void pour(struct bucket *from, struct bucket *to)
 	if (from->water < 0) from->water = 0;
 }
 
-int solver_check(int nsteps, struct step steps[MAXSTEPS])
-{
+int solver_check(int nsteps, struct step steps[MAXSTEPS]) {
 	struct bucket *buckets;
 	buckets = malloc(sizeof(ibuckets));
 	memcpy(buckets, ibuckets, sizeof(ibuckets));
-	
+
 	progress();
-	
-	// Simulate
-	for (int i = 0; i < nsteps; i++)
-	{
+
+	/* Simulate */
+	for (int i = 0; i < nsteps; i++) {
 		pour(buckets + steps[i].from, buckets + steps[i].to);
 	}
-	
-	// Check goals
-	for (int i = 0; i <= nibuckets; i++)
-	{
-		if ((buckets[i].water != buckets[i].target) && (buckets[i].target != -1))
-		{
+
+	/* Check goals */
+	for (int i = 0; i <= nibuckets; i++) {
+		if ((buckets[i].water != buckets[i].target) && (buckets[i].target != -1)) {
 			free(buckets);
 			return 0;
 		}
 	}
-	
-	// OMFG this matches
+
+	/* OMFG this matches! */
 	free(buckets);
 	return 1;
 }
 
-void dump_steps(int depth, struct step steps[MAXSTEPS])
-{
+void dump_steps(int depth, struct step steps[MAXSTEPS]) {
 	printf("Steps:");
-	for (int i = 0; i < depth; i++)
-	{
+	for (int i = 0; i < depth; i++) {
 		// printf(" [%d] %d -> %d", i, steps[i].from, steps[i].to);
 		if (steps[i].from == 0)     { printf(" fill %d;", steps[i].to); }
 		else if (steps[i].to == 0)  { printf(" empty %d;", steps[i].from); }
@@ -118,28 +107,24 @@ void dump_steps(int depth, struct step steps[MAXSTEPS])
 	printf("\n");
 }
 
-void solver_step(int depth, struct step steps[MAXSTEPS])
-{
-	// Try what we have
+void solver_step(int depth, struct step steps[MAXSTEPS]) {
+	/* Try the steps we have so far */
 	if (depth >= steps_min)
-		if (solver_check(depth, steps))
-		{
+		if (solver_check(depth, steps)) {
 			dump_steps(depth, steps);
 		}
-	
-	// Go on?
+
+	/* Go on? */
 	if (depth == steps_max)
 		return;
-	
-	// Try everything
-	for (int from = 0; from < nibuckets; from++)
-	{
+
+	/* Try every possible step now */
+	for (int from = 0; from < nibuckets; from++) {
 #ifdef PARALLEL
 		if (depth == 0 && (from & PARALLEL_MASK) != PARALLEL_VALUE)
 			continue;
 #endif
-		for (int to = 0; to < nibuckets; to++)
-		{
+		for (int to = 0; to < nibuckets; to++) {
 			if (from == to)
 				continue;
 			steps[depth].from = from;
@@ -149,29 +134,26 @@ void solver_step(int depth, struct step steps[MAXSTEPS])
 	}
 }
 
-int main(int argc, char *argv[])
-{
-	if (argc < 3)
-	{
+int main(int argc, char *argv[]) {
+	if (argc < 3) {
 		printf("Usage: %s steps_min steps_max  water1 maximum1 target1  water2 maximum2 target2 ...\n", argv[0]);
 		printf("watern = Available Water, maximumn = Bucket Size, targetn = goal or -1\n");
 		printf("First specified bucket is the spare bucket\n");
 		exit(1);
 	}
-	
+
 	steps_min = atoi(argv[1]);
 	steps_max = atoi(argv[2]);
-	
+
 	nibuckets = 0;
-	while (argv[3 + nibuckets * 3] != NULL)
-	{
+	while (argv[3 + nibuckets * 3] != NULL) {
 		ibuckets[nibuckets].water = atoi(argv[3 + nibuckets * 3]);
 		ibuckets[nibuckets].maximum = atoi(argv[3 + nibuckets * 3 + 1]);
 		ibuckets[nibuckets].target = atoi(argv[3 + nibuckets * 3 + 2]);
 		nibuckets++;
 	}
-	
+
 	struct step steps[MAXSTEPS];
-	
+
 	solver_step(0, steps);
 }

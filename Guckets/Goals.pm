@@ -7,13 +7,10 @@ package Guckets::Goals;
 use strict;
 use warnings;
 
-sub water
-{
+sub water {
 	my ($bucket, $water) = @_;
-	return
-	{
-		callback => sub
-		{
+	return {
+		callback => sub {
 			my ($level) = @_;
 			return $level->{buckets}->[$bucket - 1]->{water} == $water;
 		},
