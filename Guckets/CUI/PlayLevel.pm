@@ -24,6 +24,7 @@ my %keys = (
 	"k" => "up",
 	"l" => "right",
 
+	"i" => "info",
 	"?" => "help",
 	"q" => "quit",
 );
@@ -36,12 +37,25 @@ sub level_try {
 	}
 }
 
+sub level_info {
+	my $level = shift;
+	Guckets::CUI::Dialog::dialog("normal",
+		"- Level information\n" .
+		"Name             : $level->{name}\n" .
+		"Author           : $level->{author}\n" .
+		($level->{description} ? "Description      : $level->{description}\n" : "" ) .
+		($level->{longdescription} ? "\n$level->{longdescription}" : "")
+	);
+}
+
 sub play {
 	my ($level) = @_;
 
 	my $key;
 	my $current_bucket = 0;
 	my $selected_bucket = -1;
+	Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
+	level_info($level);
 	Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 	while ($key = myterm::readkey()) {
 		$key = $keys{$key};
@@ -70,6 +84,7 @@ sub play {
 
 		if ($key eq "quit") { return 4; }
 		if ($key eq "help") { Guckets::CUI::Render::help_full(); }
+		if ($key eq "info") { level_info($level); }
 
 		Guckets::CUI::Render::render($level, $current_bucket, $selected_bucket);
 

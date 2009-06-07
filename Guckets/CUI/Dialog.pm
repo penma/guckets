@@ -14,9 +14,13 @@ sub dialog {
 	# Width: approx. 2/3 of screen
 	my $dialogwidth = int($width * 0.6);
 	my @wrappedtext = split(/\n/,
-		autoformat($text,
-		           { right => $dialogwidth - 4, fill => 0, all => 1 }
-	));
+		autoformat($text, {
+			right       => $dialogwidth - 4,
+			fill        => 0,
+			all         => 1,
+			squeeze     => 0,
+			lists       => "",
+	}));
 	# Height: Line count + 2l border + 2l additional text
 	my $dialogheight = scalar(@wrappedtext) + 4;
 	# In case it doesn't fit on screen, reduce the height

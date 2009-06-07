@@ -125,6 +125,8 @@ sub help {
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
 		sprintf("\e[1m%s:\e[m %s", "Enter", "Select for pouring"));
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
+		sprintf("\e[1m%s:\e[m %s", "i", "Level info"));
+	$line += Guckets::CUI::Primitives::text(3, $line, 32,
 		sprintf("\e[1m%s:\e[m %s", "?", "Help"));
 	$line += Guckets::CUI::Primitives::text(3, $line, 32,
 		sprintf("\e[1m%s:\e[m %s", "q", "Exit"));
@@ -140,14 +142,15 @@ sub help_full {
 Guckets (Console-Based User Interface)
 Made 2006, 2007, 2008 by Lars Stoltenow <penma@penma.de>
 
-Game Description
-.   In Guckets you must fill buckets with water. You must have a specific amount of water in one or more buckets. Sounds easy, but you are not allowed to measure any water, and you can only fill, empty, and pour your buckets. There is support for own levels.
+- Game Description
+In Guckets you must fill buckets with water. You must have a specific amount of water in one or more buckets. Sounds easy, but you are not allowed to measure any water, and you can only fill, empty, and pour your buckets. There is support for own levels.
 
-Keys
-.   Left/Right: Choose the bucket
-    Up/Down: Fill or empty the current bucket
-    Enter: 1. Select a bucket to pour water from, or 2. Select the second bucket to pour water in
-    q: Exit Game
+- Keys
+Left/Right : Choose the bucket
+Up/Down    : Fill or empty the current bucket
+Enter      : 1. Select a bucket to pour water from, or 2. Select the second bucket to pour water in
+i          : Level information
+q          : Exit Game
 
 END_OF_HELP
 }
