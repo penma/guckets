@@ -31,7 +31,7 @@ my %keys = (
 
 sub level_try {
 	my $res = shift;
-	if (defined($res)) {
+	if (defined($res) and $res ne "") {
 		Guckets::CUI::Dialog::dialog("info",
 			"This action has been rejected!\n" . $res);
 	}
