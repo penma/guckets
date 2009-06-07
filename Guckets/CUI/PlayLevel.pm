@@ -28,6 +28,14 @@ my %keys = (
 	"q" => "quit",
 );
 
+sub level_try {
+	my $res = shift;
+	if (defined($res)) {
+		Guckets::CUI::Dialog::dialog("info",
+			"This action has been rejected!\n" . $res);
+	}
+}
+
 sub play {
 	my ($level) = @_;
 
@@ -50,14 +58,15 @@ sub play {
 			if ($selected_bucket == -1) { # no bucket selected yet
 				$selected_bucket = $current_bucket;
 			} else { # do some action, we have two buckets now
-				$level->bucket_pour($selected_bucket, $current_bucket)
-					if ($selected_bucket != $current_bucket);
+				if ($selected_bucket != $current_bucket) {
+					level_try($level->bucket_pour($selected_bucket, $current_bucket));
+				}
 				$selected_bucket = -1;
 			}
 		}
 
-		if ($key eq "up") { $level->bucket_fill($current_bucket); }
-		if ($key eq "down") { $level->bucket_empty($current_bucket); }
+		if ($key eq "up") { level_try($level->bucket_fill($current_bucket)); }
+		if ($key eq "down") { level_try($level->bucket_empty($current_bucket)); }
 
 		if ($key eq "quit") { return 4; }
 		if ($key eq "help") { Guckets::CUI::Render::help_full(); }

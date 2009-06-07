@@ -40,20 +40,32 @@ sub auto_spare_bucket {
 # (which are really just the same as pouring from/to the spare bucket).
 sub bucket_fill {
 	my ($self, $bucket) = @_;
-	return if ($self->{hooks}->{fill} and not $self->{hooks}->{fill}->($self, $bucket));
+	if ($self->{hooks}->{fill}) {
+		my $r = $self->{hooks}->{fill}->($self, $bucket);
+		return $r if (defined($r));
+	}
 	$self->{spare_bucket}->pour_to($self->{buckets}->[$bucket]);
+	return undef;
 }
 
 sub bucket_empty {
 	my ($self, $bucket) = @_;
-	return if ($self->{hooks}->{empty} and not $self->{hooks}->{empty}->($self, $bucket));
+	if ($self->{hooks}->{empty}) {
+		my $r = $self->{hooks}->{empty}->($self, $bucket);
+		return $r if (defined($r));
+	}
 	$self->{buckets}->[$bucket]->pour_to($self->{spare_bucket});
+	return undef;
 }
 
 sub bucket_pour {
 	my ($self, $bucket1, $bucket2) = @_;
-	return if ($self->{hooks}->{pour} and not $self->{hooks}->{pour}->($self, $bucket1, $bucket2));
+	if ($self->{hooks}->{pour}) {
+		my $r = $self->{hooks}->{pour}->($self, $bucket1, $bucket2);
+		return $r if (defined($r));
+	}
 	$self->{buckets}->[$bucket1]->pour_to($self->{buckets}->[$bucket2]);
+	return undef;
 }
 
 # goal checking

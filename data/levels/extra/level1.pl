@@ -23,7 +23,8 @@ $level->{hooks}->{pour} = sub {
 	);
 
 	my $transfer = min($wat1, $max2 - $wat2);
-	return ($transfer >= 5);
+	return "You're transferring less than 5 liters at once!" if ($transfer < 5);
+	return undef;
 };
 
 $level->{spare_bucket}->{water} = 24;
