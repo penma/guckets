@@ -34,7 +34,7 @@ sub readkey {
 		$current =~ y/O/\[/;
 		$stream .= $current;
 
-		if ($current eq "[") # application/cursor keys {
+		if ($current eq "[") { # application/cursor keys
 			sysread(STDIN, $current, 1);
 			$stream .= $current;
 
