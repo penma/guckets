@@ -6,11 +6,8 @@ use Guckets::TUI;
 use Guckets::Load;
 
 if (scalar(@ARGV) < 1) {
-	print << 'EOT';
-Guckets Text User Interface
-Made 2006, 2007, 2008 Lars Stoltenow <penma@penma.de>
-
-Usage: guckets-tui <level>
+	print << "EOT";
+Usage: $0 <level>
 EOT
 	exit(2);
 }

@@ -17,8 +17,8 @@ $SIG{INT} = $SIG{TERM} = sub {
 myterm::unset(POSIX::ICANON | POSIX::ECHO);
 
 if (scalar(@ARGV) < 1) {
-	print << 'EOT';
-Usage: guckets-tui <level>
+	print << "EOT";
+Usage: $0 <level>
 EOT
 	exit(2);
 }

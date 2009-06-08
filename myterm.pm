@@ -59,6 +59,7 @@ sub readline {
 
 sub dimensions {
 	my ($w, $h) = Term::Size::chars *STDOUT{IO};
+	($w, $h) = (80, 24) if (!defined($w) or $w == 0);
 	return ($w, $h);
 }
 
