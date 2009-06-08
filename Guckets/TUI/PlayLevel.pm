@@ -54,12 +54,19 @@ sub play {
 				print "ERROR: No such bucket.\n";
 			} else {
 				if ($_[0] eq "fill") {
-					print "Filling bucket $n\n";
-					$level->bucket_fill($n - 1);
+					print "Filling bucket $n";
+					my $r = $level->bucket_fill($n - 1);
+					if (defined($r) and $r ne "") {
+						print " disallowed by level author!\n$r";
+					}
 				} else {
-					print "Emptying bucket $n\n";
-					$level->bucket_empty($n - 1);
+					print "Emptying bucket $n";
+					my $r = $level->bucket_empty($n - 1);
+					if (defined($r) and $r ne "") {
+						print " disallowed by level author!\n$r";
+					}
 				}
+				print "\n";
 				$changed = 1;
 			}
 		} elsif ($_[0] eq "pour") {
@@ -72,8 +79,12 @@ sub play {
 				if ($n1 == $n2) {
 					print "ERROR: Source and destination bucket are the same!\n";
 				} else {
-					print "Pouring water from bucket $n1 to bucket $n2\n";
-					$level->bucket_pour($n1 - 1, $n2 - 1);
+					print "Pouring water from bucket $n1 to bucket $n2";
+					my $r = $level->bucket_pour($n1 - 1, $n2 - 1);
+					if (defined($r) and $r ne "") {
+						print " disallowed by level author!\n$r";
+					}
+					print "\n";
 					$changed = 1;
 				}
 			}
