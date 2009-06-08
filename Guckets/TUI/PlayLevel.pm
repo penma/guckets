@@ -31,12 +31,22 @@ sub print_state {
 	}
 }
 
+sub print_info {
+	my ($level) = @_;
+	print
+		"Name             : $level->{name}\n" .
+		"Author           : $level->{author}\n" .
+		($level->{description} ? "Description      : $level->{description}\n" : "" ) .
+		($level->{longdescription} ? "\n$level->{longdescription}" : "") . "\n";
+}
+
 sub play {
 	my ($level) = @_;
 
 	Guckets::TUI::help() if (caller() ne "Guckets::TUI::PlayLevelset");
 	print "\n";
 
+	print_info($level);
 	print_state($level);
 	my $changed = 0;
 
@@ -90,6 +100,7 @@ sub play {
 			}
 		}
 		# help and various
+		elsif ($_[0] eq "info") { print_info($level); }
 		elsif ($_[0] eq "help") { Guckets::TUI::help($_[1]); }
 		elsif ($_[0] eq "show") { $changed = 1; }
 		elsif ($_[0] eq "exit" or $_[0] eq "quit") { return 4; }
