@@ -23,6 +23,7 @@ my %keys = (
 	"j" => "down",
 	"k" => "up",
 	"l" => "right",
+	" " => "select",
 
 	"i" => "info",
 	"?" => "help",
