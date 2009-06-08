@@ -19,6 +19,7 @@ EOT
 		if (caller() ne "Guckets::TUI::PlayLevelset") {
 			print << 'EOT';
     show             - Show the bucket state
+    info             - Print level information
     fill <n>         - Fill bucket n
     empty <n>        - Empty bucket n
     pour <n1> <n2>   - Pour water from bucket n1 to bucket n2
