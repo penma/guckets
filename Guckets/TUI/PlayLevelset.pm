@@ -48,6 +48,7 @@ sub play {
 
 		if (!defined($_[0])) { goto prepare_next; }; # no-op
 
+		if ($_[0] =~ /^\d+$/ and @_ == 1) { unshift(@_, "start"); }
 		if ($_[0] eq "start") {
 			my $num = int($_[1] // 1) - 1;
 			if ($num < 0 or $num > scalar(@{$levelset->{levels}})) {
