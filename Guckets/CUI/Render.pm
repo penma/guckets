@@ -31,20 +31,20 @@ sub bucket_large {
 	for (my $cy = 0;
 	     $cy <= $level->{buckets}->[$bucket]->{water_max};
 	     $cy++) {
-		printf( "\e[%d;%dH  %s│     │\e[m",
+		printf( "\e[%d;%dH  %s\cNx     x\cO\e[m",
 			$off_y - $cy * 2, $off_x, $outline_color)
 			if ($cy < $level->{buckets}->[$bucket]->{water_max});
-		printf("\e[%d;%dH%2d%s├─    │\e[m",
+		printf("\e[%d;%dH%2d%s\cNtq    x\cO\e[m",
 			$off_y - $cy * 2 + 1, $off_x, $cy, $outline_color);
 	}
-	printf("\e[%d;%dH  %s└─────┘\e[m", $off_y + 2, $off_x, $outline_color);
+	printf("\e[%d;%dH  %s\cNmqqqqqj\cO\e[m", $off_y + 2, $off_x, $outline_color);
 	printf("\e[%d;%dH%d", $off_y + 3, $off_x + 5, $bucket + 1);
 
 	# the content
 	for (my $cy = 0; $cy < $level->{buckets}->[$bucket]->{water}; $cy++) {
-		printf("\e[%d;%dH%s│\e[7;22;34m     \e[m%3\$s│\e[m",
+		printf("\e[%d;%dH%s\cNx\e[7;22;34m     \e[m%3\$sx\cO\e[m",
 			$off_y - $cy * 2, $off_x + 2, $outline_color);
-		printf("\e[%d;%dH%s├\e[7;22;34m─    \e[m%3\$s│\e[m",
+		printf("\e[%d;%dH%s\cNt\e[7;22;34ms    \e[m%3\$sx\cO\e[m",
 			$off_y - $cy * 2 + 1, $off_x + 2, $outline_color);
 	}
 }
@@ -58,11 +58,11 @@ sub bucket_small {
 	for (my $cy = 0;
 	     $cy <= $level->{buckets}->[$bucket]->{water_max};
 	     $cy++) {
-		printf("\e[%d;%dH%s│%s   \e[m%3\$s│\e[m",
+		printf("\e[%d;%dH%s\cNx\cO%s   \e[m%3\$s\cNx\cO\e[m",
 			$off_y - $cy, $off_x, $outline_color,
 			$cy < $level->{buckets}->[$bucket]->{water} ? "\e[7;34;22m" : "")
 	}
-	printf("\e[%d;%dH%s└───┘\e[m", $off_y + 1, $off_x, $outline_color);
+	printf("\e[%d;%dH%s\cNmqqqj\cO\e[m", $off_y + 1, $off_x, $outline_color);
 	printf("\e[%d;%dH %2d", $off_y + 2, $off_x, $bucket + 1);
 	printf("\e[%d;%dH%2d/%2d", $off_y + 3, $off_x,
 		$level->{buckets}->[$bucket]->{water},
@@ -163,8 +163,8 @@ END_OF_HELP
 sub render {
 	my ($level, $current_bucket, $selected_bucket) = @_;
 
-	# clear
-	print "\e[2J";
+	# clear and initialize alternate characters
+	print "\e[2J\e(B\e)0";
 
 	headline();
 

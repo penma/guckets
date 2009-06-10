@@ -13,8 +13,8 @@ sub render {
 	my ($levelset, $current_level_index, $menu_selected) = @_;
 	my ($width, $height) = myterm::dimensions();
 
-	# clear
-	print "\e[2J";
+	# clear and init line chars
+	print "\e[2J\e[2J\e(B\e)0";
 
 	# title
 	Guckets::CUI::Primitives::box(1, 1, $width, 3);

@@ -8,11 +8,11 @@ use myterm;
 
 sub box {
 	my ($x1, $y1, $x2, $y2, $text) = @_;
-	printf("\e[%d;%dH┌%s┐", $y1, $x1, "─" x ($x2 - $x1 - 1));
+	printf("\e[%d;%dH\cNl%sk\cO", $y1, $x1, "q" x ($x2 - $x1 - 1));
 	for (my $line = $y1 + 1; $line < $y2; $line++) {
-		printf("\e[%d;%dH│\e[%1\$d;%3\$dH│", $line, $x1, $x2);
+		printf("\e[%d;%dH\cNx\e[%1\$d;%3\$dHx\cO", $line, $x1, $x2);
 	}
-	printf("\e[%d;%dH└%s┘", $y2, $x1, "─" x ($x2 - $x1 - 1));
+	printf("\e[%d;%dH\cNm%sj\cO", $y2, $x1, "q" x ($x2 - $x1 - 1));
 
 	if (defined($text)) {
 		printf("\e[%d;%dH %s ", $y1, $x1 + 2, $text);
