@@ -1,3 +1,5 @@
+# vim:ft=perl
+
 $level = new Guckets::Level();
 $level->{author} = "Lars Stoltenow";
 $level->{name} = "Level 10";
