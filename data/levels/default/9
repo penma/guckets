@@ -1,15 +1,16 @@
 # vim:ft=perl
 
 $level = new Guckets::Level();
-$level->{author} = "Lars Stoltenow";
+$level->{author} = "Dominic Laumer";
 $level->{name} = "Level 9";
 
-push(@{$level->{buckets}}, new Guckets::Bucket(10, 10));
-push(@{$level->{buckets}}, new Guckets::Bucket(0, 7));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 6));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 5));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 4));
 push(@{$level->{buckets}}, new Guckets::Bucket(0, 3));
 
-push(@{$level->{goals}}, Guckets::Goals::water(1, 5));
-push(@{$level->{goals}}, Guckets::Goals::water(2, 5));
+push(@{$level->{goals}}, Guckets::Goals::water(1, 4));
+push(@{$level->{goals}}, Guckets::Goals::water(3, 3));
+push(@{$level->{goals}}, Guckets::Goals::water(4, 1));
 
-$level->{spare_bucket}->{water} = 0;
-$level->{spare_bucket}->{water_max} = 0;
+$level->auto_spare_bucket();
