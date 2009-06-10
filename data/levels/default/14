@@ -1,0 +1,20 @@
+$level = new Guckets::Level();
+$level->{author} = "Vsevolod Kozlov";
+$level->{name} = "Level 14";
+
+# 0 0 -1  1 3 3  7 7 0  0 8 3  0 8 1  0 8 1
+push(@{$level->{buckets}}, new Guckets::Bucket(1, 3));
+push(@{$level->{buckets}}, new Guckets::Bucket(7, 7));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 8));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 8));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 8));
+
+push(@{$level->{goals}}, Guckets::Goals::water(1, 3));
+push(@{$level->{goals}}, Guckets::Goals::water(2, 0));
+push(@{$level->{goals}}, Guckets::Goals::water(3, 3));
+push(@{$level->{goals}}, Guckets::Goals::water(4, 1));
+push(@{$level->{goals}}, Guckets::Goals::water(5, 1));
+
+$level->{spare_bucket}->{water} = 0;
+$level->{spare_bucket}->{water_max} = 0;
+
