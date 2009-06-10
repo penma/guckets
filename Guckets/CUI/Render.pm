@@ -23,7 +23,7 @@ sub headline {
 }
 
 sub bucket_large {
-	my ($level, $bucket, $outline_color, $height) = @_;
+	my ($level, $bucket, $outline_color, $height, $bcount) = @_;
 	my $off_x = $bucket * 10 + 40;
 	my $off_y = $height * 2 + 4;
 
@@ -50,7 +50,7 @@ sub bucket_large {
 }
 
 sub bucket_small {
-	my ($level, $bucket, $outline_color, $height) = @_;
+	my ($level, $bucket, $outline_color, $height, $bcount) = @_;
 	my $off_x = $bucket * 7 + 39;
 	my $off_y = $height + 5;
 
@@ -70,9 +70,14 @@ sub bucket_small {
 }
 
 sub bucket {
-	my ($level, $bucket, $outline_color, $height) = @_;
+	my ($level, $bucket, $outline_color, $height, $bcount) = @_;
 
-	if ((myterm::height() - 8) / 2 >= $height) {
+	#printf("%d term, %d bucket\n", myterm::height() - 7, $height * 2); sleep(2);
+	if (
+		myterm::height() - 7 >= $height * 2
+		and
+		myterm::width() - 40 >= $bcount * 10
+	) {
 		bucket_large(@_);
 	} else {
 		bucket_small(@_);
@@ -174,7 +179,8 @@ sub render {
 
 			(sort { $b->{water_max} <=> $a->{water_max} }
 				@{$level->{buckets}}
-			)[0]->{water_max});
+			)[0]->{water_max},
+			scalar(@{$level->{buckets}}));
 	}
 
 	printf("\e[%d;%dH", myterm::height(), 1);
