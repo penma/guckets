@@ -1,6 +1,6 @@
 $level = new Guckets::Level();
 $level->{author} = "Lars Stoltenow";
-$level->{name} = "Extra Level 1";
+$level->{name} = "Level 12";
 $level->{description} =
 	"You know this already. This time however, when you pour, you must " .
 	"transfer at least two liters of water.";
