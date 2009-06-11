@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+use Time::HiRes qw(sleep time);
+
+$| = 1;
+
+# we'll face a dialog box...
+print "\cM";
+
+sub moveto {
+	my $new = shift;
+	state $old = 0;
+
+	if ($new > $old) {
+		print "" . ("l" x ($new - $old));
+	} else {
+		print "" . ("h" x ($old - $new));
+	}
+	$old = $new;
+}
+
+# read the actions.
+my $basetime = undef;
+my $starttime = time();
+while (<>) {
+	chomp;
+	my ($time, $action) = /time=([^,]+), .*? action=(.*)$/;
+
+	if (!defined($basetime)) {
+		$basetime = $time;
+	}
+
+	# sleep the appropriate amount of time.
+	my $diff = ($time - $basetime) - (time() - $starttime);
+	if ($diff < 0) {
+		$starttime += $diff;
+	} else {
+		sleep($diff);
+	}
+
+	# now do the stuff
+	if ($action =~ /^fill (\d+)$/) {
+		moveto($1);
+		print "k";
+	} elsif ($action =~ /^empty (\d+)$/) {
+		moveto($1);
+		print "j";
+	} elsif ($action =~ /^pour (\d+) -> (\d+)$/) {
+		moveto($1); print " "; moveto($2); print " ";
+	} elsif ($action =~ /^(fill|empty|pour) completed$/) {
+		# nothing
+	} elsif ($action =~ /^hook executed, replied/) {
+		# be sure to display the message
+		sleep(1);
+		$starttime += 1;
+		print "\cJ";
+	} elsif ($action =~ /^goals /) {
+		print "\cJ";
+	}
+}
