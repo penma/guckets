@@ -1,0 +1,15 @@
+# vim:ft=perl
+
+$level = new Guckets::Level();
+$level->{author} = "Vsevolod Kozlov";
+$level->{name} = "Level 16";
+
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 9));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 4));
+push(@{$level->{buckets}}, new Guckets::Bucket(0, 9));
+
+push(@{$level->{goals}}, Guckets::Goals::water(1, 7));
+push(@{$level->{goals}}, Guckets::Goals::water(3, 5));
+
+$level->auto_spare_bucket();
+
